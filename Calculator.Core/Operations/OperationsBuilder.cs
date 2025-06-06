@@ -8,22 +8,22 @@ public class OperationsBuilder
 {
     private readonly Dictionary<string, IOperation> _operations = new (StringComparer.OrdinalIgnoreCase);
 
-    public OperationsBuilder AddOperation(string key, string name,Func<double[],double> func, int argCount)
+    public OperationsBuilder AddOperation(string key,Func<double[],double> func, int argCount,bool canHaveMoreArgsThanRequired=false)
     {
-        _operations.TryAdd(key, new Operation(name,func, argCount));
+        _operations.TryAdd(key, new Operation(key, func, argCount, canHaveMoreArgsThanRequired));
         return this;
     }
 
     public OperationsBuilder AddArithmeticOperations()
     {
         return this
-            .AddOperation("+", "add", args => args[0] + args[1], 2)
-            .AddOperation("-", "subtract", args => args[0] - args[1], 2)
-            .AddOperation("*", "multiply", args => args[0] * args[1], 2)
-            .AddOperation("/", "divide", args =>
+            .AddOperation("+", args => args.Sum() , 2,true)
+            .AddOperation("-", args => args[0] + args.Skip(1).Sum(arg => arg * (-1)) , 2,true)
+            .AddOperation("*", args => args.Aggregate(1.0,(acc,arg)=>acc*arg), 2,true)
+            .AddOperation("/", args =>
             {
                 if (args[1] == 0)
-                    throw CalculatorException.CalculationError("divide", "Division by zero");
+                    throw new InvalidCalculatorArgumentException("Division by zero",0,1);
                 return args[0] / args[1];
             }, 2);
     }
@@ -31,13 +31,13 @@ public class OperationsBuilder
     public OperationsBuilder AddMathFunctions()
     {
         return this
-            .AddOperation("fact","fact", MathOperations.Factorial, 1)
-            .AddOperation("log", "log", MathOperations.Logarithm, 2)
-            .AddOperation("root", "root", MathOperations.Root, 2)
-            .AddOperation("sqrt", "sqrt", args =>
+            .AddOperation("fact", MathOperations.Factorial, 1)
+            .AddOperation("log", MathOperations.Logarithm, 2)
+            .AddOperation("root", MathOperations.Root, 2)
+            .AddOperation("sqrt", args =>
             {
                 if (args[0] < 0)
-                    throw CalculatorException.InvalidArgument("sqrt", "Must be non-negative", 1);
+                    throw new InvalidCalculatorArgumentException("", "Must be non-negative", args[0], 1);
                 return Math.Sqrt(args[0]);
             }, 1);
     }
@@ -45,17 +45,17 @@ public class OperationsBuilder
     public OperationsBuilder AddTrigonometricFunctions()
     {
         return this
-            .AddOperation("sin", "sin", args => Math.Sin(args[0]), 1)
-            .AddOperation("cos", "cos", args => Math.Cos(args[0]), 1)
-            .AddOperation("tan", "tan", MathOperations.Tan, 1)
-            .AddOperation("atan2", "atan2", args => Math.Atan2(args[0], args[1]), 2);
+            .AddOperation("sin", args => Math.Sin(args[0]), 1)
+            .AddOperation("cos", args => Math.Cos(args[0]), 1)
+            .AddOperation("tan", MathOperations.Tan, 1)
+            .AddOperation("atan2", args => Math.Atan2(args[0], args[1]), 2);
     }
 
     public OperationsBuilder AddSpecialFunctions()
     {
         return this
-           .AddOperation("pow","pow", args => Math.Pow(args[0], args[1]), 2)
-           .AddOperation("abs","abs", args => Math.Abs(args[0]), 1);
+           .AddOperation("pow", args => Math.Pow(args[0], args[1]), 2)
+           .AddOperation("abs", args => Math.Abs(args[0]), 1);
     }
 
     public OperationsBuilder AddAll()

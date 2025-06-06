@@ -1,36 +1,19 @@
 ﻿namespace Calculator.Core.Error;
 
-public class CalculatorException : Exception
+public abstract class CalculatorException : Exception
 {
-    public ErrorType Type { get; }
+    public string Operation { get; protected set; }
 
-    public CalculatorException(ErrorType type, string message) : base(message)
+    public CalculatorException(string operation, string message) : base(message)
     {
-        Type = type;
+        Operation = operation;
     }
 
-    public CalculatorException(ErrorType type, string message, Exception inner)
+
+    public CalculatorException(string operation, string message, Exception inner)
         : base(message, inner)
     {
-        Type = type;
+        Operation = operation;
     }
-
-
-    public static CalculatorException OperationNotFound(string operation)
-        => new(ErrorType.OperationNotFound, $"Operation '{operation}' not found");
-
-    public static CalculatorException InsufficientArguments(string operation, int expected, int actual)
-    => new(ErrorType.InsufficientArguments,
-        $"Operation '{operation}' requires {expected} arguments, provided {actual}");
-
-    public static CalculatorException InvalidArgument(string operation, string problem, int? position = null)
-        => new(ErrorType.InvalidArgument,
-            position.HasValue
-                ? $"{operation}: {problem} (argument {position})"
-                : $"{operation}: {problem}");
-
-    public static CalculatorException CalculationError(string operation, string problem)
-        => new(ErrorType.CalculationError, $"{operation}: {problem}");
-
 }
 

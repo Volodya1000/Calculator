@@ -9,10 +9,10 @@ public static class MathOperations
         double n = args[0];
 
         if (n < 0 || n % 1 != 0)
-            throw  CalculatorException.InvalidArgument("fact", "Requires non-negative integer");
+            throw  new InvalidCalculatorArgumentException("Requires non-negative integer", n,1);
 
         if (n > 170)
-            throw CalculatorException.CalculationError("fact", "Value too large for double factorial");
+            new InvalidCalculatorArgumentException("Value too large for double factorial", n,1);
 
         double result = 1;
         for (int i = 2; i <= n; i++)
@@ -27,10 +27,10 @@ public static class MathOperations
         double baseValue = args[1];
 
         if (number <= 0)
-            throw CalculatorException.InvalidArgument("log", "Argument must be positive", 1);
+            throw new InvalidCalculatorArgumentException("Argument must be positive", number, 1);
 
         if (baseValue <= 0 || baseValue == 1)
-            throw CalculatorException.InvalidArgument("log", "Base must be positive and !=1", 2);
+            throw new InvalidCalculatorArgumentException("Base must be positive and !=1", baseValue, 2);
 
         return Math.Log(number, baseValue);
     }
@@ -41,10 +41,10 @@ public static class MathOperations
         double degree = args[1];
 
         if (degree == 0)
-            throw CalculatorException.InvalidArgument("root", "Degree cannot be zero", 2);
+            throw new InvalidCalculatorArgumentException("Degree cannot be zero",  degree,1);
 
         if (number < 0 && degree % 2 == 0)
-            throw CalculatorException.InvalidArgument("root", "Even root of negative is undefined");
+            throw new InvalidCalculatorArgumentException("Even root of negative is undefined", number,2);
 
         return number < 0
             ? -Math.Pow(-number, 1 / degree)
@@ -57,7 +57,7 @@ public static class MathOperations
         double cos = Math.Cos(angle);
 
         if (Math.Abs(cos) < double.Epsilon)
-            throw CalculatorException.CalculationError("tan", "Undefined for this angle");
+            throw new InvalidCalculatorArgumentException("Undefined for this angle", angle,1);
 
         return Math.Tan(angle);
     }

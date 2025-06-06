@@ -18,7 +18,7 @@ public class Calculator
     public Result<double> Call(string operationName, params double[] args)
     {
         if (!_operations.TryGetValue(operationName, out var operation))
-            return Result<double>.Failure(CalculatorException.OperationNotFound(operationName));
+            return Result<double>.Failure(new OperationNotFoundException(operationName));
 
         try
         {
