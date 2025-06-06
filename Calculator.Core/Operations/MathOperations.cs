@@ -4,10 +4,8 @@ namespace Calculator.Core.Operations;
 
 public static class MathOperations
 {
-    public static double Factorial(double[] args)
+    public static double Factorial(double n)
     {
-        double n = args[0];
-
         if (n < 0 || n % 1 != 0)
             throw  new InvalidCalculatorArgumentException("Requires non-negative integer", n,1);
 
@@ -21,11 +19,8 @@ public static class MathOperations
         return result;
     }
 
-    public static double Logarithm(double[] args)
+    public static double Logarithm(double number, double baseValue)
     {
-        double number = args[0];
-        double baseValue = args[1];
-
         if (number <= 0)
             throw new InvalidCalculatorArgumentException("Argument must be positive", number, 1);
 
@@ -35,11 +30,8 @@ public static class MathOperations
         return Math.Log(number, baseValue);
     }
 
-    public static double Root(double[] args)
+    public static double Root(double number, double degree)
     {
-        double number = args[0];
-        double degree = args[1];
-
         if (degree == 0)
             throw new InvalidCalculatorArgumentException("Degree cannot be zero",  degree,1);
 
@@ -51,9 +43,8 @@ public static class MathOperations
             : Math.Pow(number, 1 / degree);
     }
 
-    public static double Tan(double[] args)
+    public static double Tan(double angle)
     {
-        double angle = args[0];
         double cos = Math.Cos(angle);
 
         if (Math.Abs(cos) < double.Epsilon)

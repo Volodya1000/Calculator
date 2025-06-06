@@ -14,48 +14,58 @@ public class OperationsBuilder
         return this;
     }
 
+    public OperationsBuilder AddOperation(string key, Func<double, double, double> func, bool canHaveMoreArgsThanRequired = false)
+        => AddOperation(key, args => func(args[0], args[1]), 2, canHaveMoreArgsThanRequired);
+
+
+    public OperationsBuilder AddOperation(string key, Func<double, double> func)
+         => AddOperation(key, args => func(args[0]), 1);
+
+    public OperationsBuilder AddOperation(string key, Func<double, double, double> func)
+        =>  AddOperation(key, args => {return func(args[0], args[1]);},2);
+
     public OperationsBuilder AddArithmeticOperations()
     {
         return this
-            .AddOperation("+", args => args.Sum() , 2,true)
+            .AddOperation("+", args => args.Sum(),2,true)
             .AddOperation("-", args => args[0] + args.Skip(1).Sum(arg => arg * (-1)) , 2,true)
             .AddOperation("*", args => args.Aggregate(1.0,(acc,arg)=>acc*arg), 2,true)
-            .AddOperation("/", args =>
+            .AddOperation("/", (a,b) =>
             {
-                if (args[1] == 0)
+                if (b == 0)
                     throw new InvalidCalculatorArgumentException("Division by zero",0,1);
-                return args[0] / args[1];
-            }, 2);
+                return a / b;
+            });
     }
 
     public OperationsBuilder AddMathFunctions()
     {
         return this
-            .AddOperation("fact", MathOperations.Factorial, 1)
-            .AddOperation("log", MathOperations.Logarithm, 2)
-            .AddOperation("root", MathOperations.Root, 2)
-            .AddOperation("sqrt", args =>
+            .AddOperation("fact", MathOperations.Factorial)
+            .AddOperation("log", MathOperations.Logarithm)
+            .AddOperation("root", MathOperations.Root)
+            .AddOperation("sqrt", arg =>
             {
-                if (args[0] < 0)
-                    throw new InvalidCalculatorArgumentException("Must be non-negative", args[0], 1);
-                return Math.Sqrt(args[0]);
-            }, 1);
+                if (arg < 0)
+                    throw new InvalidCalculatorArgumentException("Must be non-negative", arg, 1);
+                return Math.Sqrt(arg);
+            });
     }
 
     public OperationsBuilder AddTrigonometricFunctions()
     {
         return this
-            .AddOperation("sin", args => Math.Sin(args[0]), 1)
-            .AddOperation("cos", args => Math.Cos(args[0]), 1)
-            .AddOperation("tan", MathOperations.Tan, 1)
-            .AddOperation("atan2", args => Math.Atan2(args[0], args[1]), 2);
+            .AddOperation("sin", Math.Sin)
+            .AddOperation("cos", Math.Cos)
+            .AddOperation("tan", MathOperations.Tan)
+            .AddOperation("atan2", Math.Atan2);
     }
 
     public OperationsBuilder AddSpecialFunctions()
     {
         return this
-           .AddOperation("pow", args => Math.Pow(args[0], args[1]), 2)
-           .AddOperation("abs", args => Math.Abs(args[0]), 1);
+           .AddOperation("pow", Math.Pow)
+           .AddOperation("abs", Math.Abs);
     }
 
     public OperationsBuilder AddAll()
