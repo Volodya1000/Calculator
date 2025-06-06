@@ -37,7 +37,7 @@ public class OperationsBuilder
             .AddOperation("sqrt", args =>
             {
                 if (args[0] < 0)
-                    throw new InvalidCalculatorArgumentException("", "Must be non-negative", args[0], 1);
+                    throw new InvalidCalculatorArgumentException("Must be non-negative", args[0], 1);
                 return Math.Sqrt(args[0]);
             }, 1);
     }
