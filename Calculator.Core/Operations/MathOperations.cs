@@ -8,12 +8,10 @@ public static class MathOperations
         double n = args[0];
 
         if (n < 0 || n % 1 != 0)
-            throw new CalculatorException(
-                CustomError.InvalidArgument("fact", "Requires non-negative integer"));
+            throw  CalculatorException.InvalidArgument("fact", "Requires non-negative integer");
 
         if (n > 170)
-            throw new CalculatorException(
-                CustomError.CalculationError("fact", "Value too large for double factorial"));
+            throw CalculatorException.CalculationError("fact", "Value too large for double factorial");
 
         double result = 1;
         for (int i = 2; i <= n; i++)
@@ -28,12 +26,10 @@ public static class MathOperations
         double baseValue = args[1];
 
         if (number <= 0)
-            throw new CalculatorException(
-                CustomError.InvalidArgument("log", "Argument must be positive", 1));
+            throw CalculatorException.InvalidArgument("log", "Argument must be positive", 1);
 
         if (baseValue <= 0 || baseValue == 1)
-            throw new CalculatorException(
-                CustomError.InvalidArgument("log", "Base must be positive and ≠1", 2));
+            throw CalculatorException.InvalidArgument("log", "Base must be positive and !=1", 2);
 
         return Math.Log(number, baseValue);
     }
@@ -44,12 +40,10 @@ public static class MathOperations
         double degree = args[1];
 
         if (degree == 0)
-            throw new CalculatorException(
-                CustomError.InvalidArgument("root", "Degree cannot be zero", 2));
+            throw CalculatorException.InvalidArgument("root", "Degree cannot be zero", 2);
 
         if (number < 0 && degree % 2 == 0)
-            throw new CalculatorException(
-                CustomError.InvalidArgument("root", "Even root of negative is undefined"));
+            throw CalculatorException.InvalidArgument("root", "Even root of negative is undefined");
 
         return number < 0
             ? -Math.Pow(-number, 1 / degree)
@@ -62,8 +56,7 @@ public static class MathOperations
         double cos = Math.Cos(angle);
 
         if (Math.Abs(cos) < double.Epsilon)
-            throw new CalculatorException(
-                CustomError.CalculationError("tan", "Undefined for this angle"));
+            throw CalculatorException.CalculationError("tan", "Undefined for this angle");
 
         return Math.Tan(angle);
     }

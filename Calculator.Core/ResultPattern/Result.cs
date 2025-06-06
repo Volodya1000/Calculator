@@ -23,18 +23,17 @@ public class Result<T>
         private init => _value = value;
     }
 
-    public CustomError? Error { get; }
+    public CalculatorException? Error { get; }
 
     private Result(T value)
     {
         _value = value;
         IsSuccess = true;
-        Error= CustomError.None;
     }
 
-    private Result(CustomError error)
+    private Result(CalculatorException error)
     {
-        if (error == CustomError.None)
+        if (error == null)
             throw new ArgumentException("Invalid error");
         Error = error;
         IsSuccess = false;
@@ -42,5 +41,5 @@ public class Result<T>
 
     public static Result<T> Success(T value) => new Result<T>(value);
 
-    public static Result<T> Failure(CustomError error) => new Result<T>(error);
+    public static Result<T> Failure(CalculatorException error) => new Result<T>(error);
 }

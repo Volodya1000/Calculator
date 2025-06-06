@@ -2,9 +2,9 @@
 
 public enum ErrorType
 {
-    None,
     OperationNotFound,
     InsufficientArguments,
     InvalidArgument,
-    CalculationError
+    CalculationError,
+    UnexceptedError
 }

@@ -18,7 +18,7 @@ public class Calculator
     public Result<double> Call(string operationName, params double[] args)
     {
         if (!_operations.TryGetValue(operationName, out var operation))
-            return Result<double>.Failure(CustomError.OperationNotFound(operationName));
+            return Result<double>.Failure(CalculatorException.OperationNotFound(operationName));
 
         try
         {
@@ -26,7 +26,11 @@ public class Calculator
         }
         catch (CalculatorException ex)
         {
-            return Result<double>.Failure(ex.Error);
+            return Result<double>.Failure(ex);
+        }
+        catch(Exception ex)
+        {
+            return Result<double>.Failure(new CalculatorException(ErrorType.UnexceptedError,ex.Message));
         }
     }
 

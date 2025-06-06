@@ -22,8 +22,7 @@ public class OperationsBuilder
             .AddOperation("/", "divide", args =>
             {
                 if (args[1] == 0)
-                    throw new CalculatorException(
-                        CustomError.CalculationError("divide", "Division by zero"));
+                    throw CalculatorException.CalculationError("divide", "Division by zero");
                 return args[0] / args[1];
             }, 2);
     }
@@ -37,8 +36,7 @@ public class OperationsBuilder
             .AddOperation("sqrt", "sqrt", args =>
             {
                 if (args[0] < 0)
-                    throw new CalculatorException(
-                        CustomError.InvalidArgument("sqrt", "Must be non-negative", 1));
+                    throw CalculatorException.InvalidArgument("sqrt", "Must be non-negative", 1);
                 return Math.Sqrt(args[0]);
             }, 1);
     }

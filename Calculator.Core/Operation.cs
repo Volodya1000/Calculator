@@ -20,8 +20,7 @@ public class Operation : IOperation
     {
         if (args == null) throw new ArgumentNullException(nameof(args));
         if (args.Length < _requiredArgs)
-            throw new CalculatorException(
-                CustomError.InsufficientArguments(_name, _requiredArgs, args.Length));
+            throw CalculatorException.InsufficientArguments(_name, _requiredArgs, args.Length);
 
         ValidateArguments(args);
         return ExecuteFunction(args);
@@ -32,12 +31,10 @@ public class Operation : IOperation
         for (int i = 0; i < args.Length; i++)
         {
             if (double.IsNaN(args[i]))
-                throw new CalculatorException(
-                    CustomError.InvalidArgument(_name, "Cannot be NaN", i + 1));
+                throw CalculatorException.InvalidArgument(_name, "Cannot be NaN", i + 1);
 
             if (double.IsInfinity(args[i]))
-                throw new CalculatorException(
-                    CustomError.InvalidArgument(_name, "Cannot be infinity", i + 1));
+                throw  CalculatorException.InvalidArgument(_name, "Cannot be infinity", i + 1);
         }
     }
 
@@ -48,12 +45,10 @@ public class Operation : IOperation
             double result = _function(args);
 
             if (double.IsNaN(result))
-                throw new CalculatorException(
-                    CustomError.CalculationError(_name, "Result is not a number (NaN)"));
+                throw CalculatorException.CalculationError(_name, "Result is not a number (NaN)");
 
             if (double.IsInfinity(result))
-                throw new CalculatorException(
-                    CustomError.CalculationError(_name, "Result is infinite"));
+                throw CalculatorException.CalculationError(_name, "Result is infinite");
 
             return result;
         }
@@ -63,8 +58,7 @@ public class Operation : IOperation
         }
         catch (Exception ex)
         {
-            throw new CalculatorException(
-                CustomError.CalculationError(_name, $"Operation failed: {ex.Message}"), ex);
+            throw CalculatorException.CalculationError(_name, $"Operation failed: {ex.Message}");
         }
     }
 }
