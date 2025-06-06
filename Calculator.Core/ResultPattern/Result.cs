@@ -24,7 +24,7 @@ public class Result<T>
         private init => _value = value;
     }
 
-    public CalculatorException? Error { get; }
+    public Exception? Error { get; }
 
     private Result(T value)
     {
@@ -32,7 +32,7 @@ public class Result<T>
         IsSuccess = true;
     }
 
-    private Result(CalculatorException error)
+    private Result(Exception error)
     {
         if (error == null)
             throw new ArgumentException("Invalid error");
@@ -42,5 +42,5 @@ public class Result<T>
 
     public static Result<T> Success(T value) => new Result<T>(value);
 
-    public static Result<T> Failure(CalculatorException error) => new Result<T>(error);
+    public static Result<T> Failure(Exception error) => new Result<T>(error);
 }

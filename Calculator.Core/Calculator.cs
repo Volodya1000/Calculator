@@ -24,7 +24,7 @@ public class Calculator
         {
             return Result<double>.Success(operation.Call(args));
         }
-        catch (CalculatorException ex)
+        catch (Exception ex)
         {
             return Result<double>.Failure(ex);
         }
