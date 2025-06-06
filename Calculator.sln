@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculator.Core", "Calculat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculator.ConsoleApp", "Calculator.ConsoleApp\Calculator.ConsoleApp.csproj", "{BA73B771-3A75-4B3B-B353-08616750421C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculator.Avalonia", "Calculator.Avalonia\Calculator.Avalonia.csproj", "{A0244026-4531-4993-8670-12101F5FB226}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{BA73B771-3A75-4B3B-B353-08616750421C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA73B771-3A75-4B3B-B353-08616750421C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA73B771-3A75-4B3B-B353-08616750421C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0244026-4531-4993-8670-12101F5FB226}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0244026-4531-4993-8670-12101F5FB226}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0244026-4531-4993-8670-12101F5FB226}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0244026-4531-4993-8670-12101F5FB226}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
