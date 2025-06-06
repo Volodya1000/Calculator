@@ -3,14 +3,14 @@ using Calculator.Core.Interfaces;
 
 namespace Calculator.Core.Operations;
 
-//пататерн строитель позволяет гибко добавлять только нужные операции. Например инжинерный либо упрощённый
+//пататерн строитель позволяет гибко добавлять только нужные операции. Например инжнерный либо упрощённый калькулятор
 public class OperationsBuilder
 {
     private readonly Dictionary<string, IOperation> _operations = new (StringComparer.OrdinalIgnoreCase);
 
     public OperationsBuilder AddOperation(string key, string name,Func<double[],double> func, int argCount)
     {
-        _operations.Add(key, new Operation(name,func, argCount));
+        _operations.TryAdd(key, new Operation(name,func, argCount));
         return this;
     }
 
