@@ -19,13 +19,13 @@ public class ConsoleProcessor
 
     public void Run()
     {
-        Console.WriteLine("For exit enter \"exit\", for help enter \"help\"");
+        Console.WriteLine("For exit enter \"exit\", for operations list enter \"help\"");
         while (true)
         {
             Console.ForegroundColor = _messageColor;
-            Console.WriteLine("Enter operation");
+            Console.WriteLine("op:");
 
-            string? operationInput = Console.ReadLine()?.Trim();
+            string? operationInput = Console.ReadLine()?.Trim().ToLower();
 
             if (String.IsNullOrEmpty(operationInput))
                 continue;
@@ -49,7 +49,7 @@ public class ConsoleProcessor
             }
 
             Console.ForegroundColor = _messageColor;
-            Console.WriteLine("Enter argums");
+            Console.WriteLine("args:");
 
             string? argInput = Console.ReadLine();
 

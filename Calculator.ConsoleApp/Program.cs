@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();
 
-var operations = MathOperationsFactory.CreateOperations();
+var operations = new OperationsBuilder().AddAll().Build();
 
 services.AddSingleton<Calculator.Core.Calculator>(provider =>
     new Calculator.Core.Calculator(operations));
