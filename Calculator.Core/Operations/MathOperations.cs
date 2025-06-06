@@ -1,6 +1,7 @@
 ﻿using Calculator.Core.Error;
 
 namespace Calculator.Core.Operations;
+
 public static class MathOperations
 {
     public static double Factorial(double[] args)

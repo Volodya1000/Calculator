@@ -2,6 +2,7 @@
 
 namespace Calculator.Core.ResultPattern;
 
+//Такой паттерн часто используется в Asp Net Core проектах которые я изучал. Думаю это лучше че м библиотека, в которой функции выбрасиывают исключения
 public class Result<T>
 {
     private readonly T? _value;

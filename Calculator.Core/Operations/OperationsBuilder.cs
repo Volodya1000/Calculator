@@ -3,6 +3,7 @@ using Calculator.Core.Interfaces;
 
 namespace Calculator.Core.Operations;
 
+//пататерн строитель позволяет гибко добавлять только нужные операции. Например инжинерный либо упрощённый
 public class OperationsBuilder
 {
     private readonly Dictionary<string, IOperation> _operations = new (StringComparer.OrdinalIgnoreCase);

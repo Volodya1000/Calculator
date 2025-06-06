@@ -1,5 +1,6 @@
 ﻿using Calculator.ConsoleApp;
 using Calculator.Core.Operations;
+//Сразу использую DependencyInjection чтоб на будущее было удобнее переделать например в AvaloniaUI
 using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();

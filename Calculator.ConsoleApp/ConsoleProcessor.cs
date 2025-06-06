@@ -110,7 +110,6 @@ public class ConsoleProcessor
     {
         Console.ForegroundColor = _messageColor;
         Console.WriteLine("Available operations:");
-        Console.WriteLine("─────────────────────");
 
         foreach (var operation in _calculatorFacade.GetAvailableOperations())
         {

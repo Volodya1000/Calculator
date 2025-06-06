@@ -28,10 +28,6 @@ public class Calculator
         {
             return Result<double>.Failure(ex);
         }
-        catch(Exception ex)
-        {
-            return Result<double>.Failure(new CalculatorException(ErrorType.UnexceptedError,ex.Message));
-        }
     }
 
     public bool OperationExists(string operation) => _operations.ContainsKey(operation);

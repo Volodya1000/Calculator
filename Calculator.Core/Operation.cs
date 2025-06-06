@@ -7,6 +7,8 @@ public class Operation : IOperation
 {
     private readonly Func<double[], double> _function;
     private readonly int _requiredArgs;
+
+    //Имя позволяет иметь различные ключи для вызова операции и для её описания, напрмер в исключениях. Я бы добавил имя и RequiredArgs в IOperation
     private readonly string _name;
 
     public Operation(string name, Func<double[], double> function, int requiredArgs)
