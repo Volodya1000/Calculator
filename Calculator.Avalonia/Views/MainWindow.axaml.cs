@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Calculator.Avalonia.Views
 {
@@ -7,6 +8,8 @@ namespace Calculator.Avalonia.Views
         public MainWindow()
         {
             InitializeComponent();
+
+            ComandsListBox.ItemsSource = App.ServiceProvider.GetService<Calculator.Core.Calculator>()?.GetAvailableOperations();
         }
     }
 }

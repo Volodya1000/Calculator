@@ -30,7 +30,7 @@
                Margin="5" />
 
     <!-- Кнопки с цифрами от 1 до 9 -->
-    <Grid Grid.Row="2" RowDefinitions="*,*,*" ColumnDefinitions="*,*,*,*">
+    <Grid Grid.Row="2" RowDefinitions="*,*,*" ColumnDefinitions="*,*,*,*,*">
       <Button Grid.Row="0" Grid.Column="0" Command="{Binding AddNumberCommand}">
         <Button.CommandParameter>
           <s:Int32>1</s:Int32>
@@ -88,9 +88,20 @@
 
 
 
-      <Button Grid.Row="0" Grid.Column="4" Command="{Binding RemoveLastNumberComand}">
+      <Button Grid.Row="0" Grid.Column="3" Command="{Binding RemoveLastNumberComand}">
         убрать
       </Button>
+
+      <Button Grid.Row="1" 
+              Grid.Column="3" 
+              Command="{Binding ExecuteOperation}"
+              CommandParameter="=">
+        =
+      </Button>
+      
+      <ListBox Grid.Row="0" Grid.Column="4" Name="ComandsListBox"/>
+
+     
       
     </Grid>
   </Grid>
