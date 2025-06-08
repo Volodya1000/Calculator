@@ -8,28 +8,24 @@ public class OperationsBuilder
 {
     private readonly Dictionary<string, IOperation> _operations = new (StringComparer.OrdinalIgnoreCase);
 
-    public OperationsBuilder AddOperation(string key,Func<double[],double> func, int argCount,bool canHaveMoreArgsThanRequired=false)
+    public OperationsBuilder AddOperation(string key,Func<double[],double> func, int argCount)
     {
-        _operations.TryAdd(key, new Operation(key, func, argCount, canHaveMoreArgsThanRequired));
+        _operations.TryAdd(key, new Operation(key, func, argCount));
         return this;
     }
-
-    public OperationsBuilder AddOperation(string key, Func<double, double, double> func, bool canHaveMoreArgsThanRequired = false)
-        => AddOperation(key, args => func(args[0], args[1]), 2, canHaveMoreArgsThanRequired);
-
 
     public OperationsBuilder AddOperation(string key, Func<double, double> func)
          => AddOperation(key, args => func(args[0]), 1);
 
     public OperationsBuilder AddOperation(string key, Func<double, double, double> func)
-        =>  AddOperation(key, args => {return func(args[0], args[1]);},2);
+        => AddOperation(key, args => func(args[0], args[1]), 2);
 
     public OperationsBuilder AddArithmeticOperations()
     {
         return this
-            .AddOperation("+", args => args.Sum(),2,true)
-            .AddOperation("-", args => args[0] + args.Skip(1).Sum(arg => arg * (-1)) , 2,true)
-            .AddOperation("*", args => args.Aggregate(1.0,(acc,arg)=>acc*arg), 2,true)
+            .AddOperation("+", args => args.Sum(),2)
+            .AddOperation("-", args => args[0] + args.Skip(1).Sum(arg => arg * (-1)) , 2)
+            .AddOperation("*", args => args.Aggregate(1.0,(acc,arg)=>acc*arg), 2)
             .AddOperation("/", (a,b) =>
             {
                 if (b == 0)
