@@ -121,26 +121,25 @@ public class CalculatorWithBufferTests
     [Fact(DisplayName = "простое вычисление 2+2=4, Когда отображается результат и вводится число, то оно перекрывает резуьтат")]
     public void Execute_Performs_Calculation_And_Enter_Number()
     {
-        ExecuteSequence(
-            ("2", "", "2"),
-            ("+", "2+", "2"),
-            ("2", "2+", "2"),
-            ("=", "2+2", "4"),
-            ("5", "5", "5")
-            ); 
+        var tester = new CalculatorActionTester();
+        tester.ExecuteSequence("2", "", "2");
+        tester.ExecuteSequence("+", "2+", "2");
+        tester.ExecuteSequence("2", "2+", "2");
+        tester.ExecuteSequence("=", "2+2", "4");
+        tester.ExecuteSequence("5", "", "5");
     }
 
 
     [Fact(DisplayName = "простое вычисление 2+2=4, Когда отображается результат и вводится число, то оно перекрывает резуьтат")]
     public void Execute_Performs_Calculationn_And_Enter_Dot()
     {
-        ExecuteSequence(
-            ("2", "", "2"),
-            ("+", "2+", "2"),
-            ("2", "2+", "2"),
-            ("=", "2+2", "4"),
-            (".", "0.", "0.")
-            );
+        var tester = new CalculatorActionTester();
+        tester.ExecuteSequence("2", "", "2");
+        tester.ExecuteSequence("+", "2+", "2");
+        tester.ExecuteSequence("2", "2+", "2");
+        tester.ExecuteSequence("=", "2+2", "4");
+        tester.ExecuteSequence(".", "", "0.");
+
     }
 
 
@@ -312,4 +311,9 @@ public class CalculatorWithBufferTests
             calc.MainBuffer.Replace(" ", "").Should().Be(step.expectedDisplay);
         }
     }
+
+
+    
 }
+
+

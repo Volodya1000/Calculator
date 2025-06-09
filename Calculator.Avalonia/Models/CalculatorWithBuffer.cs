@@ -1,7 +1,6 @@
 ﻿using Calculator.Core.ResultPattern;
 using System;
 using System.Globalization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Calculator.Avalonia.Models;
 
@@ -83,10 +82,10 @@ public class CalculatorWithBuffer
 
         //обрезанное число чтоб после конкатанации длина не привысила максимальную
 
-        string numberStr= number.ToString(); ;
+        string numberStr= number.ToString(); 
         int canTake = MAX_MAIN_BUFFER_LENGTH - MainBuffer.Length;
         string cuttedNumber = numberStr.Substring(0,Math.Min(canTake, numberStr.Length));
-        if (MainBuffer=="0")
+        if (MainBuffer=="0"|| lastOperation!="")
         {
             MainBuffer= cuttedNumber;
         }
@@ -101,6 +100,7 @@ public class CalculatorWithBuffer
         if (MainBufferShowsResult)
         {
             MainBuffer = "0.";
+            HistoryBuffer = "";
             MainBufferShowsResult = false;
         }
         else
@@ -183,7 +183,7 @@ public class CalculatorWithBuffer
     {
         MainBufferShowsResult = false;
         MainBuffer = "0";
-        HistoryBuffer = "0";
+        HistoryBuffer = "";
     }
 
     #region Math Functions
