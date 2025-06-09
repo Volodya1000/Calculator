@@ -9,10 +9,13 @@ public class CalculatorWithBuffer
 {
     public static readonly int MAX_MAIN_BUFFER_LENGTH = 9;
 
+
     /// <summary>
     /// Отображает историю последних вычислений
     /// </summary>
     public string HistoryBuffer { get; private set; } = "";
+
+    //public string HistoryBuffer => MakeHistoryBuffer();
 
     /// <summary>
     /// Отображает резултат или введённый операнд
@@ -43,27 +46,32 @@ public class CalculatorWithBuffer
     }
 
 
+    //private string MakeHistoryBuffer()
+    //{
+    //    if(firstValue)
+    //}
+
     public void EnterNumber(int number)
     {
         if (MainBuffer.Length == MAX_MAIN_BUFFER_LENGTH)
             return;
 
-        if(lastOperation!="") //сразу показывать предворительный результат
-        {
-            double previewSecondValue= double.Parse(MainBuffer, CultureInfo.InvariantCulture);
+        //if(lastOperation!="") //сразу показывать предворительный результат
+        //{
+        //    double previewSecondValue= double.Parse(MainBuffer, CultureInfo.InvariantCulture);
 
             
 
-            var previewResult = _executer.Call(lastOperation, firstValue, previewSecondValue);
-            if (previewResult.IsSuccess)
-            {
-                MainBuffer = previewResult.Value.ToString().Replace(",", ".");
-            }
-            else
-            {
-                //ДОПИСАТЬ !!!!!
-            }
-        }
+        //    var previewResult = _executer.Call(lastOperation, firstValue, previewSecondValue);
+        //    if (previewResult.IsSuccess)
+        //    {
+        //        MainBuffer = previewResult.Value.ToString().Replace(",", ".");
+        //    }
+        //    else
+        //    {
+        //        //ДОПИСАТЬ !!!!!
+        //    }
+        //}
 
 
         if (MainBufferShowsResult)
@@ -72,13 +80,19 @@ public class CalculatorWithBuffer
             MainBufferShowsResult = false;
             HistoryBuffer = "";
         }
-        else if(MainBuffer=="0")
+
+        //обрезанное число чтоб после конкатанации длина не привысила максимальную
+
+        string numberStr= number.ToString(); ;
+        int canTake = MAX_MAIN_BUFFER_LENGTH - MainBuffer.Length;
+        string cuttedNumber = numberStr.Substring(0,Math.Min(canTake, numberStr.Length));
+        if (MainBuffer=="0")
         {
-            MainBuffer= number.ToString();
+            MainBuffer= cuttedNumber;
         }
         else
         {
-            MainBuffer += number.ToString();
+            MainBuffer += cuttedNumber;
         }
     }
 
