@@ -4,6 +4,8 @@ namespace Calculator.Avalonia.Models;
 
 public class CalculatorWithBuffer
 {
+    public static readonly int MAX_MAIN_BUFFER_LENGTH = 9;
+
     /// <summary>
     /// Отображает историю последних вычислений
     /// </summary>
@@ -25,11 +27,6 @@ public class CalculatorWithBuffer
         throw new NotImplementedException(); 
     }
 
-    public void EraseLast()
-    {
-        throw new NotImplementedException();
-    }
-
     public void EnterOperation(OperationType op)
     {
         throw new NotImplementedException();
@@ -43,11 +40,26 @@ public class CalculatorWithBuffer
         throw new NotImplementedException();
     }
 
+
+    /// <summary>
+    ///На калькуляторе обозначается ←
+    /// </summary>
+    public void EraseLast()
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// На калькуляторе обозначается CE - Clear Entry
+    /// </summary>
     public void ClearMainBuffer()
     {
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// На калькуляторе обозначается AC - All Clear
+    /// </summary>
     public void ClearMainAndHistoryBufers()
     {
         throw new NotImplementedException();
