@@ -1,5 +1,6 @@
 ﻿using Calculator.Core.ResultPattern;
 using System;
+using System.Data;
 using System.Globalization;
 
 namespace Calculator.Avalonia.Models;
@@ -44,34 +45,10 @@ public class CalculatorWithBuffer
         _executer = calculator;
     }
 
-
-    //private string MakeHistoryBuffer()
-    //{
-    //    if(firstValue)
-    //}
-
     public void EnterNumber(int number)
     {
         if (MainBuffer.Length == MAX_MAIN_BUFFER_LENGTH)
             return;
-
-        //if(lastOperation!="") //сразу показывать предворительный результат
-        //{
-        //    double previewSecondValue= double.Parse(MainBuffer, CultureInfo.InvariantCulture);
-
-            
-
-        //    var previewResult = _executer.Call(lastOperation, firstValue, previewSecondValue);
-        //    if (previewResult.IsSuccess)
-        //    {
-        //        MainBuffer = previewResult.Value.ToString().Replace(",", ".");
-        //    }
-        //    else
-        //    {
-        //        //ДОПИСАТЬ !!!!!
-        //    }
-        //}
-
 
         if (MainBufferShowsResult)
         {
@@ -120,13 +97,44 @@ public class CalculatorWithBuffer
             MainBuffer = MainBuffer.Substring(0, MainBuffer.Length-2);//удаление последнего символа точка
         }
 
-        firstValue = double.Parse(MainBuffer, CultureInfo.InvariantCulture);
-        string firstValueWithDot = firstValue.ToString().Replace(",", ".");
+        if (lastOperation == "")
+        {
+            firstValue = MainBufferToDouble();
+            string firstValueWithDot = firstValue.ToString().Replace(",", ".");
 
-        HistoryBuffer = firstValueWithDot + " "+ OperationHelper.GetSymbol(op);
-        MainBuffer = firstValueWithDot;
+            HistoryBuffer = firstValueWithDot + " " + OperationHelper.GetSymbol(op);
+            MainBuffer = firstValueWithDot;
+            lastOperation = OperationHelper.GetSymbol(op).ToString();
 
-        lastOperation = OperationHelper.GetSymbol(op).ToString();
+        }
+        else
+        {
+            if(MainBufferToDouble()==firstValue) //сначала была нажата одна операция, а потом другая и нужно поменять в HistoryBuffer символ операции
+            {
+                HistoryBuffer = firstValue.ToString() + OperationHelper.GetSymbol(op);
+                lastOperation=OperationHelper.GetSymbol(op).ToString();
+            }
+            //в HistoryBuffer есть выражение из операции и двух операндов и его уже можно вычислить,
+            //но ползователь не нажал = а выбрал новую операцию, поэтому нужно вычислить предыдущее
+            else
+            {
+                secondValue = MainBufferToDouble();
+                var result = _executer.Call(lastOperation, firstValue, secondValue);
+                if (result.IsSuccess)
+                {
+                    string resultWithDot = result.Value.ToString().Replace(",", ".");
+                    HistoryBuffer = resultWithDot + OperationHelper.GetSymbol(op);
+                    MainBuffer = resultWithDot;
+                    MainBufferShowsResult = false; //возможжно лишняя строка
+                    lastOperation = OperationHelper.GetSymbol(op).ToString();
+                    firstValue = result.Value;
+                }
+                else
+                {
+                    // Дописать
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -136,8 +144,14 @@ public class CalculatorWithBuffer
     {
         if (MainBufferShowsResult)
             return;
-        secondValue = double.Parse(MainBuffer, CultureInfo.InvariantCulture);
-        string secondValueWithDot = firstValue.ToString().Replace(",", ".");
+        else if(lastOperation == "")
+        {
+            MainBufferShowsResult = true;
+            return;
+        }
+
+        secondValue = MainBufferToDouble();
+        string secondValueWithDot = secondValue.ToString().Replace(",", ".");
         HistoryBuffer += secondValueWithDot;
 
         var result = _executer.Call(lastOperation, firstValue,secondValue);
@@ -150,6 +164,7 @@ public class CalculatorWithBuffer
         else
         {
             //ДОПИСАТЬ !!!!!
+
         }
     }
 
@@ -184,8 +199,15 @@ public class CalculatorWithBuffer
         MainBufferShowsResult = false;
         MainBuffer = "0";
         HistoryBuffer = "";
+        lastOperation = "";
     }
 
     #region Math Functions
+    #endregion
+
+    #region helpers
+
+    private double MainBufferToDouble() => double.Parse(MainBuffer, CultureInfo.InvariantCulture);
+
     #endregion
 }

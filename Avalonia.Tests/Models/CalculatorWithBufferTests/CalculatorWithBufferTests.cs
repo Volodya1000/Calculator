@@ -146,14 +146,14 @@ public class CalculatorWithBufferTests
     [Fact(DisplayName = "Execute: вычисление с последовательными операциями")]
     public void Execute_With_Multiple_Operations()
     {
-        ExecuteSequence(
-            ("10", "", "10"),
-            ("+", "10+", "10"),
-            ("5", "10+5", "5"),
-            ("*", "15*", "15"),
-            ("2", "15*2", "2"),
-            ("=", "30", "30")
-        );
+        var tester = new CalculatorActionTester();
+
+        tester.ExecuteSequence("10", "", "10");
+        tester.ExecuteSequence("+", "10+", "10");
+        tester.ExecuteSequence("5", "10+5", "5");
+        tester.ExecuteSequence("*", "15*", "15");
+        tester.ExecuteSequence("2", "15*2", "2");
+        tester.ExecuteSequence("=", "15*2", "30");
     }
 
     [Fact(DisplayName = "ClearMainBuffer: сброс основного буфера")]
@@ -192,12 +192,12 @@ public class CalculatorWithBufferTests
     [Fact(DisplayName = "EraseLast: удаление последнего символа после execute")]
     public void EraseLast_Removes_Last_Character_After_Execute()
     {
-        ExecuteSequence(
-            ("1", "", "1"),
-            ("=", "", "1"),
-            ("←", "", "1"),
-            ("←", "", "1")
-        );
+        var tester = new CalculatorActionTester();
+
+        tester.ExecuteSequence("1", "", "1");
+        tester.ExecuteSequence("=", "", "1");
+        tester.ExecuteSequence("←", "", "1");
+        tester.ExecuteSequence("←", "", "1");
     }
 
     [Fact(DisplayName = "EnterOperation: ввод операции без ввода операнда")]
@@ -245,22 +245,23 @@ public class CalculatorWithBufferTests
     public void Long_Number_Input_Limited()
     {
         var numberWithMaxLength = string.Concat(Enumerable.Repeat("9", CalculatorWithBuffer.MAX_MAIN_BUFFER_LENGTH));
-        ExecuteSequence(
-            (numberWithMaxLength, "", numberWithMaxLength),
-            ("9", "", numberWithMaxLength)
-        );
+
+        var tester = new CalculatorActionTester();
+
+        tester.ExecuteSequence(numberWithMaxLength, "", numberWithMaxLength);
+        tester.ExecuteSequence("9", "", numberWithMaxLength);
     }
 
     [Fact(DisplayName = "повторное нажатие '='")]
     public void Repeat_Execute_Operation()
     {
-        ExecuteSequence(
-            ("2", "", "2"),
-            ("+", "2+", "2"),
-            ("4", "2+4", "6"),
-            ("=", "2+4", "6"),
-            ("=", "2+4", "6")
-        );
+        var tester = new CalculatorActionTester();
+
+        tester.ExecuteSequence("2", "", "2");
+        tester.ExecuteSequence("+", "2+", "2");
+        tester.ExecuteSequence("4", "2+", "4");
+        tester.ExecuteSequence("=", "2+4", "6");
+        tester.ExecuteSequence("=", "2+4", "6");
     }
 
     // Вспомогательный метод для последовательных действий
