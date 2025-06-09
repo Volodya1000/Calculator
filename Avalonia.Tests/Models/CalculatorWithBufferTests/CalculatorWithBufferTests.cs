@@ -1,11 +1,19 @@
 ﻿using Calculator.Avalonia.Models;
+using Calculator.Core.Operations;
 using FluentAssertions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Avalonia.Tests.Models.CalculatorWithBufferTests;
 
 public class CalculatorWithBufferTests
 {
+    public CalculatorWithBuffer CreateCalculator()
+    {
+        var operations = new OperationsBuilder().AddAll().Build();
+        var calculator= new Calculator.Core.Calculator(operations);
+        return new CalculatorWithBuffer(calculator);
+    }
+
+
     [Fact(DisplayName = "EnterNumber: корректное добавление числа и отбражение в обоих буферах")]
     public void NumberInput_UpdatesDisplay_HistoryRemainsEmpty()
     {
@@ -110,16 +118,31 @@ public class CalculatorWithBufferTests
         );
     }
 
-    [Fact(DisplayName = "Execute: простое вычисление 2+2=4")]
-    public void Execute_Performs_Calculation()
+    [Fact(DisplayName = "простое вычисление 2+2=4, Когда отображается результат и вводится число, то оно перекрывает резуьтат")]
+    public void Execute_Performs_Calculation_And_Enter_Number()
     {
         ExecuteSequence(
             ("2", "", "2"),
             ("+", "2+", "2"),
             ("2", "2+", "2"),
-            ("=", "2+2", "4")
-        );
+            ("=", "2+2", "4"),
+            ("5", "5", "5")
+            ); 
     }
+
+
+    [Fact(DisplayName = "простое вычисление 2+2=4, Когда отображается результат и вводится число, то оно перекрывает резуьтат")]
+    public void Execute_Performs_Calculationn_And_Enter_Dot()
+    {
+        ExecuteSequence(
+            ("2", "", "2"),
+            ("+", "2+", "2"),
+            ("2", "2+", "2"),
+            ("=", "2+2", "4"),
+            (".", "0.", "0.")
+            );
+    }
+
 
     [Fact(DisplayName = "Execute: вычисление с последовательными операциями")]
     public void Execute_With_Multiple_Operations()
@@ -244,7 +267,7 @@ public class CalculatorWithBufferTests
     // Вспомогательный метод для последовательных действий
     private void ExecuteSequence(params (string action, string expectedHistory, string expectedDisplay)[] steps)
     {
-        var calc = new CalculatorWithBuffer();
+        var calc = CreateCalculator();
         foreach (var step in steps)
         {
             if (int.TryParse(step.action, out int number))
@@ -285,8 +308,8 @@ public class CalculatorWithBufferTests
                 }
             }
 
-            calc.HistoryBuffer.Should().Be(step.expectedHistory);
-            calc.MainBuffer.Should().Be(step.expectedDisplay);
+            calc.HistoryBuffer.Replace(" ", "").Should().Be(step.expectedHistory);
+            calc.MainBuffer.Replace(" ", "").Should().Be(step.expectedDisplay);
         }
     }
 }
