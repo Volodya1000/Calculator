@@ -1,4 +1,5 @@
 ﻿using Calculator.Core.ResultPattern;
+using DynamicData.Kernel;
 using System;
 using System.Data;
 using System.Globalization;
@@ -97,7 +98,11 @@ public class CalculatorWithBuffer
             MainBuffer = MainBuffer.Substring(0, MainBuffer.Length-2);//удаление последнего символа точка
         }
 
-        if (lastOperation == "")
+        if (MainBufferShowsResult)
+        {
+
+        }
+        else if (lastOperation == "")
         {
             firstValue = MainBufferToDouble();
             string firstValueWithDot = firstValue.ToString().Replace(",", ".");
@@ -109,10 +114,10 @@ public class CalculatorWithBuffer
         }
         else
         {
-            if(MainBufferToDouble()==firstValue) //сначала была нажата одна операция, а потом другая и нужно поменять в HistoryBuffer символ операции
+            if (MainBufferToDouble() == firstValue) //сначала была нажата одна операция, а потом другая и нужно поменять в HistoryBuffer символ операции
             {
                 HistoryBuffer = firstValue.ToString() + OperationHelper.GetSymbol(op);
-                lastOperation=OperationHelper.GetSymbol(op).ToString();
+                lastOperation = OperationHelper.GetSymbol(op).ToString();
             }
             //в HistoryBuffer есть выражение из операции и двух операндов и его уже можно вычислить,
             //но ползователь не нажал = а выбрал новую операцию, поэтому нужно вычислить предыдущее

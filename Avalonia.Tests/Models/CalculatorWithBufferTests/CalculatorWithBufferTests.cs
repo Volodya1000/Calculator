@@ -106,7 +106,7 @@ public class CalculatorWithBufferTests
         tester.ExecuteSequence("-", "5-", "5");
     }
 
-    [Fact(DisplayName = "простое вычисление 2+2=4, Когда отображается результат и вводится число, то оно перекрывает резуьтат")]
+    [Fact(DisplayName = "Когда отображается результат и вводится число, то оно перекрывает резуьтат")]
     public void Execute_Performs_Calculation_And_Enter_Number()
     {
         var tester = new CalculatorActionTester();
@@ -115,6 +115,9 @@ public class CalculatorWithBufferTests
         tester.ExecuteSequence("2", "2+", "2");
         tester.ExecuteSequence("=", "2+2", "4");
         tester.ExecuteSequence("5", "", "5");
+        tester.ExecuteSequence("-", "5-", "5");
+        tester.ExecuteSequence("2", "5-", "2");
+        tester.ExecuteSequence("=", "5-2", "3");
     }
 
     [Fact(DisplayName = "простое вычисление 2+2=4, Когда отображается результат и вводится число, то оно перекрывает резуьтат")]
