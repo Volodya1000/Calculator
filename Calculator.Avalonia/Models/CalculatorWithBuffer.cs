@@ -30,7 +30,7 @@ public class CalculatorWithBuffer
         throw new NotImplementedException();
     }
 
-    public void EnterOperatin(OperationType op)
+    public void EnterOperation(OperationType op)
     {
         throw new NotImplementedException();
     }

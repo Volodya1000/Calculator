@@ -3,7 +3,7 @@
 public enum OperationType
 {
     Addition,
-    Substraction,
+    Subtraction,
     Dividing,
-    Multiplying
+    Multiplication
 }
