@@ -7,7 +7,7 @@ using ReactiveUI;
 public class MainWindowViewModel : ReactiveObject
 {
     private string _shownValue = "0";
-    private string _expressionBuffer = string.Empty;
+    private string _expressionBuffer ="2+2*(1-sin(30))";
     private bool _isRadians;
 
     public string ShownValue

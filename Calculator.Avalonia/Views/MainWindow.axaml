@@ -1,16 +1,12 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:Calculator.Avalonia.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
-        Width="350"
-        Height="500"
         x:Class="Calculator.Avalonia.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="Calculator.Avalonia">
-
+        Title="Calculator.Avalonia"
+        Width="400"
+        Height="600"
+        Icon="/Assets/avalonia-logo.ico">
 
   <Window.Styles>
     <Style Selector="Window">
@@ -19,13 +15,27 @@
       <Setter Property="MaxWidth" Value="400"/>
       <Setter Property="MaxHeight" Value="600"/>
     </Style>
+    <!-- Базовый стиль для всех кнопок -->
+    <Style Selector="Button">
+      <Setter Property="Margin" Value="2"/>
+      <Setter Property="Padding" Value="0"/>
+      <Setter Property="FontSize" Value="18"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+      <Setter Property="Background" Value="#2196F3"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="VerticalAlignment" Value="Stretch"/>
+    </Style>
   </Window.Styles>
 
-  <Design.DataContext>
+    <Design.DataContext>
     <vm:MainWindowViewModel />
   </Design.DataContext>
 
-  <Grid RowDefinitions="auto, auto, auto, *">
+  <Grid RowDefinitions="auto, auto, *">
     <!-- Меню -->
     <Menu Grid.Row="0">
       <MenuItem Header="File">
@@ -34,89 +44,68 @@
     </Menu>
 
     <!-- Дисплей -->
-    <Grid Grid.Row="2" RowDefinitions="auto,auto" Margin="0,10,0,10">
+    <Grid Grid.Row="1" RowDefinitions="auto,auto" Margin="10">
       <TextBlock Grid.Row="0"
                  Text="{Binding ExpressionBuffer}"
                  TextAlignment="Right"
                  FontSize="20"
-                 Foreground="#aaa"
-                 Margin="5" />
+                 Foreground="#aaa"/>
       <TextBlock Grid.Row="1"
                  Text="{Binding ShownValue}"
                  TextAlignment="Right"
-                 FontSize="30"
-                 Margin="5" />
+                 FontSize="30"/>
     </Grid>
 
     <!-- Кнопки калькулятора -->
-    <Grid Grid.Row="3"
-      Margin="0,0,0,10">      
-      <Grid.RowDefinitions>
-        <RowDefinition Height="*" />
-        <RowDefinition Height="*" />
-        <RowDefinition Height="*" />
-        <RowDefinition Height="*" />
-        <RowDefinition Height="*" />
-        <RowDefinition Height="*" />
-        <RowDefinition Height="*" />
-      </Grid.RowDefinitions>
-      <!-- 5 колонок -->
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="*" />
-      </Grid.ColumnDefinitions>
-
+    <UniformGrid Grid.Row="2" Columns="5" Margin="10">
       <!-- ROW 0 -->
-      <Button Grid.Row="0" Grid.Column="0" Content="AC"    Command="{Binding ClearCommand}" />
-      <Button Grid.Row="0" Grid.Column="1" Content="RAD"   Command="{Binding ToggleDegRadCommand}" />
-      <Button Grid.Row="0" Grid.Column="2" Content="("     Command="{Binding AddParenthesisCommand}" CommandParameter="(" />
-      <Button Grid.Row="0" Grid.Column="3" Content=")"     Command="{Binding AddParenthesisCommand}" CommandParameter=")" />
-      <Button Grid.Row="0" Grid.Column="4" Content="⌫"    Command="{Binding RemoveLastNumberCommand}" />
+      <Button Content="AC" Command="{Binding ClearCommand}"/>
+      <Button Content="RAD" Command="{Binding ToggleDegRadCommand}"/>
+      <Button Content="(" Command="{Binding AddParenthesisCommand}" CommandParameter="("/>
+      <Button Content=")" Command="{Binding AddParenthesisCommand}" CommandParameter=")"/>
+      <Button Content="⌫" Command="{Binding RemoveLastNumberCommand}"/>
 
       <!-- ROW 1 -->
-      <Button Grid.Row="1" Grid.Column="0" Content="e"     Command="{Binding AddConstantCommand}" CommandParameter="e" />
-      <Button Grid.Row="1" Grid.Column="1" Content="log"   Command="{Binding AddFunctionCommand}" CommandParameter="log" />
-      <Button Grid.Row="1" Grid.Column="2" Content="sin"   Command="{Binding AddFunctionCommand}" CommandParameter="sin" />
-      <Button Grid.Row="1" Grid.Column="3" Content="cos"   Command="{Binding AddFunctionCommand}" CommandParameter="cos" />
-      <Button Grid.Row="1" Grid.Column="4" Content="tan"   Command="{Binding AddFunctionCommand}" CommandParameter="tan" />
+      <Button Content="e" Command="{Binding AddConstantCommand}" CommandParameter="e"/>
+      <Button Content="log" Command="{Binding AddFunctionCommand}" CommandParameter="log"/>
+      <Button Content="sin" Command="{Binding AddFunctionCommand}" CommandParameter="sin"/>
+      <Button Content="cos" Command="{Binding AddFunctionCommand}" CommandParameter="cos"/>
+      <Button Content="tan" Command="{Binding AddFunctionCommand}" CommandParameter="tan"/>
 
       <!-- ROW 2 -->
-      <Button Grid.Row="2" Grid.Column="0" Content="1/x"   Command="{Binding ExecuteOperation}"   CommandParameter="1/x" />
-      <Button Grid.Row="2" Grid.Column="1" Content="π"     Command="{Binding AddConstantCommand}" CommandParameter="π" />
-      <Button Grid.Row="2" Grid.Column="2" Content="+/−"   Command="{Binding ToggleSignCommand}" />
-      <Button Grid.Row="2" Grid.Column="3" Content="%"     Command="{Binding ExecuteOperation}"   CommandParameter="%" />
-      <Button Grid.Row="2" Grid.Column="4" Content="÷"     Command="{Binding AddOperationCommand}" CommandParameter="/" />
+      <Button Content="1/x" Command="{Binding ExecuteOperation}" CommandParameter="1/x"/>
+      <Button Content="π" Command="{Binding AddConstantCommand}" CommandParameter="π"/>
+      <Button Content="+/−" Command="{Binding ToggleSignCommand}"/>
+      <Button Content="%" Command="{Binding ExecuteOperation}" CommandParameter="%"/>
+      <Button Content="÷" Command="{Binding AddOperationCommand}" CommandParameter="/" />
 
       <!-- ROW 3 -->
-      <Button Grid.Row="3" Grid.Column="0" Content="√x"    Command="{Binding ExecuteOperation}"   CommandParameter="sqrt" />
-      <Button Grid.Row="3" Grid.Column="1" Content="7"     Command="{Binding AddNumberCommand}"   CommandParameter="7" />
-      <Button Grid.Row="3" Grid.Column="2" Content="8"     Command="{Binding AddNumberCommand}"   CommandParameter="8" />
-      <Button Grid.Row="3" Grid.Column="3" Content="9"     Command="{Binding AddNumberCommand}"   CommandParameter="9" />
-      <Button Grid.Row="3" Grid.Column="4" Content="×"     Command="{Binding AddOperationCommand}" CommandParameter="*" />
+      <Button Content="√x" Command="{Binding ExecuteOperation}" CommandParameter="sqrt"/>
+      <Button Content="7" Command="{Binding AddNumberCommand}" CommandParameter="7"/>
+      <Button Content="8" Command="{Binding AddNumberCommand}" CommandParameter="8"/>
+      <Button Content="9" Command="{Binding AddNumberCommand}" CommandParameter="9"/>
+      <Button Content="×" Command="{Binding AddOperationCommand}" CommandParameter="*" />
 
       <!-- ROW 4 -->
-      <Button Grid.Row="4" Grid.Column="0" Content="x!"    Command="{Binding ExecuteOperation}"   CommandParameter="fact" />
-      <Button Grid.Row="4" Grid.Column="1" Content="4"     Command="{Binding AddNumberCommand}"   CommandParameter="4" />
-      <Button Grid.Row="4" Grid.Column="2" Content="5"     Command="{Binding AddNumberCommand}"   CommandParameter="5" />
-      <Button Grid.Row="4" Grid.Column="3" Content="6"     Command="{Binding AddNumberCommand}"   CommandParameter="6" />
-      <Button Grid.Row="4" Grid.Column="4" Content="−"     Command="{Binding AddOperationCommand}" CommandParameter="-" />
+      <Button Content="x!" Command="{Binding ExecuteOperation}" CommandParameter="fact"/>
+      <Button Content="4" Command="{Binding AddNumberCommand}" CommandParameter="4"/>
+      <Button Content="5" Command="{Binding AddNumberCommand}" CommandParameter="5"/>
+      <Button Content="6" Command="{Binding AddNumberCommand}" CommandParameter="6"/>
+      <Button Content="−" Command="{Binding AddOperationCommand}" CommandParameter="-" />
 
       <!-- ROW 5 -->
-      <Button Grid.Row="5" Grid.Column="0" Content="xʸ"    Command="{Binding ExecuteOperation}"   CommandParameter="^" />
-      <Button Grid.Row="5" Grid.Column="1" Content="1"     Command="{Binding AddNumberCommand}"   CommandParameter="1" />
-      <Button Grid.Row="5" Grid.Column="2" Content="2"     Command="{Binding AddNumberCommand}"   CommandParameter="2" />
-      <Button Grid.Row="5" Grid.Column="3" Content="3"     Command="{Binding AddNumberCommand}"   CommandParameter="3" />
-      <Button Grid.Row="5" Grid.Column="4" Content="+"     Command="{Binding AddOperationCommand}" CommandParameter="+" />
+      <Button Content="xʸ" Command="{Binding ExecuteOperation}" CommandParameter="^"/>
+      <Button Content="1" Command="{Binding AddNumberCommand}" CommandParameter="1"/>
+      <Button Content="2" Command="{Binding AddNumberCommand}" CommandParameter="2"/>
+      <Button Content="3" Command="{Binding AddNumberCommand}" CommandParameter="3"/>
+      <Button Content="+" Command="{Binding AddOperationCommand}" CommandParameter="+" />
 
       <!-- ROW 6 -->
-      <Button Grid.Row="6" Grid.Column="0" Content="x²"    Command="{Binding ExecuteOperation}"   CommandParameter="^2" />
-      <Button Grid.Row="6" Grid.Column="1" Content="00"    Command="{Binding AddNumberCommand}"   CommandParameter="00" />
-      <Button Grid.Row="6" Grid.Column="2" Content="."     Command="{Binding AddDecimalPointCommand}" />
-      <Button Grid.Row="6" Grid.Column="3" Content="0"     Command="{Binding AddNumberCommand}"   CommandParameter="0" />
-      <Button Grid.Row="6" Grid.Column="4" Content="="     Command="{Binding ExecuteOperation}"   CommandParameter="=" />
-    </Grid>
+      <Button Content="x²" Command="{Binding ExecuteOperation}" CommandParameter="^2"/>
+      <Button Content="00" Command="{Binding AddNumberCommand}" CommandParameter="00"/>
+      <Button Content="." Command="{Binding AddDecimalPointCommand}"/>
+      <Button Content="0" Command="{Binding AddNumberCommand}" CommandParameter="0"/>
+      <Button Content="=" Command="{Binding ExecuteOperation}" CommandParameter="="/>
+    </UniformGrid>
   </Grid>
 </Window>
