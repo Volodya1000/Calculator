@@ -64,6 +64,8 @@ public class MainWindowViewModel : ReactiveObject
     public ReactiveCommand<string, Unit> AddConstantCommand { get; }
 
     public ReactiveCommand<string, Unit> AddNumberCommand { get; }
+    public ReactiveCommand<string, Unit> AddParenthesisCommand { get; }
+    
 
     // --- Конструктор ---
     public MainWindowViewModel()
