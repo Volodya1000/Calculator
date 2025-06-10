@@ -32,7 +32,7 @@ public class ReadyForInputState : CalculatorStateBase
     {
         Context.PreviousValue = 0;
         Context.BinaryOperation = op;
-        Context.TransitionTo(new OperationPendingState(Context));
+        //Context.TransitionTo(new BinaryOperationPendingState(Context));
 
     }
 

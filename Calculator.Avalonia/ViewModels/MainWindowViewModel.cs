@@ -1,95 +1,85 @@
-﻿using Calculator.Core;
-using Microsoft.Extensions.DependencyInjection;
-using ReactiveUI;
-using System;
+﻿namespace Calculator.Avalonia.ViewModels;
+
 using System.Reactive;
+using ReactiveUI;
 
-namespace Calculator.Avalonia.ViewModels;
 
-public class MainWindowViewModel : ViewModelBase
+public class MainWindowViewModel : ReactiveObject
 {
-    private readonly Calculator.Core.Calculator _calculator;
+    private string _shownValue = "0";
+    private string _expressionBuffer = string.Empty;
+    private bool _isRadians;
 
-    private double _firstValue;
-    
-
-
-    #region Comand definition
-
-    //int - тип входного параметра, а Unit - указывает что команда не возвращает резульат.
-    //Тоесть как void Но void это ключевое слово, а не тип, поэтому тип Unit
-    public ReactiveCommand<int, Unit> AddNumberCommand { get; }
-    public ReactiveCommand<Unit, Unit> RemoveLastNumberComand { get; }
-    #endregion
-
-    public MainWindowViewModel()
+    public string ShownValue
     {
-        _calculator = App.ServiceProvider.GetService<Calculator.Core.Calculator>();
-
-        AddNumberCommand = ReactiveCommand.Create<int>(AddNumber);
-        RemoveLastNumberComand = ReactiveCommand.Create(RemoveLastNumber); // так как RemoveLastNumber не принимает аргуметов, то угловые скобки не нужны
+        get => _shownValue;
+        set => this.RaiseAndSetIfChanged(ref _shownValue, value);
     }
 
-
-    #region binging properties
-
-    private double _secondValue;
-    public double ShownValue
+    public string ExpressionBuffer
     {
-        get => _secondValue;
-        set => this.RaiseAndSetIfChanged(ref _secondValue, value);
+        get => _expressionBuffer;
+        set => this.RaiseAndSetIfChanged(ref _expressionBuffer, value);
     }
 
-    private string _operation = "";
-    public string Operation
+    public bool IsRadians
     {
-        get => _operation;
-        set => this.RaiseAndSetIfChanged(ref _operation, value);
-    }
-
-    #endregion
-
-    #region ComandImplimentation
-
-    public void Exit()
-    {
-        Environment.Exit(0);
-    }
-
-    private void AddNumber(int value)
-    {
-
-        ShownValue = ShownValue * 10 + value;
-    }
-
-    private void RemoveLastNumber()
-    {
-        ShownValue = Math.Floor(ShownValue / 10); 
-    }
-
-
-    private void ExecuteOperation(string operation)
-    {
-        if (_calculator.OperationExists(operation))
+        get => _isRadians;
+        set
         {
-            var result = _calculator.Call(operation, _secondValue, _firstValue);
-        
-            if(result.IsSuccess)
+            if (this.RaiseAndSetIfChanged(ref _isRadians, value))
             {
-                _firstValue= result.Value;
-                ShownValue = 0;
+                if (value)
+                    IsDegSelected = false;
             }
         }
-        if (operation == "=")
+    }
+
+    private bool _isDegSelected = true;
+
+    public bool IsDegSelected
+    {
+        get => _isDegSelected;
+        set
         {
-            ShownValue = _firstValue;
-            _operation ="+";
-            _firstValue = 0;
-        }
-        else
-        {
-            _operation = operation;
+            if (this.RaiseAndSetIfChanged(ref _isDegSelected, value))
+            {
+                if (value)
+                    IsRadians = false;
+            }
         }
     }
-    #endregion
+
+    // --- Команды ---
+    public ReactiveCommand<Unit, Unit> ClearCommand { get; }
+    public ReactiveCommand<Unit, Unit> RemoveLastNumberCommand { get; }
+    public ReactiveCommand<Unit, Unit> AddDecimalPointCommand { get; }
+    public ReactiveCommand<Unit, Unit> ToggleSignCommand { get; }
+    public ReactiveCommand<Unit, Unit> ToggleDegRadCommand { get; }
+    public ReactiveCommand<Unit, Unit> ExitCommand { get; }
+
+    public ReactiveCommand<string, Unit> AddOperationCommand { get; }
+    public ReactiveCommand<string, Unit> ExecuteOperation { get; }
+    public ReactiveCommand<string, Unit> AddFunctionCommand { get; }
+    public ReactiveCommand<string, Unit> AddConstantCommand { get; }
+
+    public ReactiveCommand<string, Unit> AddNumberCommand { get; }
+
+    // --- Конструктор ---
+    public MainWindowViewModel()
+    {
+        // --- Инициализация команд ---
+        ClearCommand = ReactiveCommand.Create(() => { });
+        RemoveLastNumberCommand = ReactiveCommand.Create(() => { });
+        AddDecimalPointCommand = ReactiveCommand.Create(() => { });
+        ToggleSignCommand = ReactiveCommand.Create(() => { });
+        ToggleDegRadCommand = ReactiveCommand.Create(() => { });
+        ExitCommand = ReactiveCommand.Create(() => { });
+
+        AddOperationCommand = ReactiveCommand.Create<string>(_ => { });
+        ExecuteOperation = ReactiveCommand.Create<string>(_ => { });
+        AddFunctionCommand = ReactiveCommand.Create<string>(_ => { });
+        AddConstantCommand = ReactiveCommand.Create<string>(_ => { });
+        AddNumberCommand = ReactiveCommand.Create<string>(_ => { });
+    }
 }
