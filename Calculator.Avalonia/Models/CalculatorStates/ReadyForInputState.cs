@@ -2,38 +2,65 @@
 
 namespace Calculator.Avalonia.Models.CalculatorStates;
 
-public class ReadyForInputState : ICalculatorState
+public class ReadyForInputState : CalculatorStateBase
 {
-    public void EnterNumber(CalculatorContext context, int number)
+    public ReadyForInputState(CalculatorContext context) : base(context) { }
+
+    public override void EnterNumber(char number)
     {
-        context.MainBuffer = number.ToString();
-        context.CurrentState = new EnteringNumberState(); // Переход в состояние ввода числа
+        Context.CurrentInput = number.ToString();
+        Context.TransitionTo(new EnteringNumberState(Context));
+
     }
 
-    public void EnterOperation(CalculatorContext context, OperationType operation)
+    public override void EnterDot()
     {
-        context.CurrentValue = 0;
-        context.PendingOperation = OperationHelper.GetSymbol(operation).ToString();
-        context.PendingOperationType = operation;
-        context.HistoryBuffer = $"0 {context.PendingOperation}";
-        context.CurrentState = new OperationSelectedState(); // Переход в состояние выбора операции
+        Context.CurrentInput = "0.";
+        Context.TransitionTo(new EnteringNumberState(Context));
     }
 
-    //public void ExecuteUnary(CalculatorContext context, OperationType operation) =>
-    //    context.MainBuffer = "Error";
+    public override void EnterConstant(ConstantType constant)
+    {
+        var symbol = ConstantFactory.GetSymbol(constant);
+        Context.CurrentInput = symbol;
+        Context.TransitionTo(new EnteringNumberState(Context));
+    }
 
-    public void ExecuteBinary(CalculatorContext context) =>
-        context.MainBuffer = "Error";
 
-    public void EnterDot(CalculatorContext context) =>
-        context.MainBuffer = "0.";
 
-    public void EraseLast(CalculatorContext context) =>
-        context.MainBuffer = "0";
+    public override void EnterBinaryOperation(string op)
+    {
+        Context.PreviousValue = 0;
+        Context.BinaryOperation = op;
+        Context.TransitionTo(new OperationPendingState(Context));
 
-    public void ClearMainBuffer(CalculatorContext context) =>
-        context.CurrentState = new ReadyForInputState();
+    }
 
-    public void ClearAll(CalculatorContext context) =>
-        context.CurrentState = new ReadyForInputState();
+    public override void EnterUnaryPreffixOperation(string op)
+    {
+        //На экране в буфере должен исчезнуть ноль и отобразиться название операции и (
+    }
+
+    public override void EnterUnaryPostfixOperation(string op)
+    {
+        //Вычисление унарной операции от начального числа 0
+    }
+
+
+    public override void Execute() 
+    {
+        //Ничего не делаем 
+
+        //Нужно ли переопределять метод ???
+    }
+
+    public override void EraseLast()
+    {
+        var s = Context.CurrentInput;
+        Context.CurrentInput = s.Length > 1 ? s[..^1] : "0";
+    }
+
+
+
+
 }

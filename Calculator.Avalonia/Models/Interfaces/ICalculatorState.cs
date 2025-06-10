@@ -2,13 +2,14 @@
 
 public interface ICalculatorState
 {
-    void EnterNumber(CalculatorContext context, int number);
-    void EnterOperation(CalculatorContext context, OperationType operation);
-    //void ExecuteUnary(CalculatorContext context, OperationType operation);
-    void ExecuteBinary(CalculatorContext context);
-    void EnterDot(CalculatorContext context);
-    void EraseLast(CalculatorContext context);
-    
-    void ClearMainBuffer(CalculatorContext context); // CE
-    void ClearAll(CalculatorContext context);        // AC
+    void EnterNumber(char digit);
+    void EnterDot();
+    void EnterConstant(ConstantType constant);
+    void EnterBinaryOperation(string op);
+    void EnterUnaryPreffixOperation(string op);
+    void EnterUnaryPostfixOperation(string op);
+    void Execute();
+    void EraseLast();
 }
+
+

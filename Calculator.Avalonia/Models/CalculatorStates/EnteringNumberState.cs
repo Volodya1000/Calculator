@@ -1,12 +1,19 @@
-﻿using Calculator.Avalonia.Models.Interfaces;
+﻿namespace Calculator.Avalonia.Models.CalculatorStates;
 
-namespace Calculator.Avalonia.Models.CalculatorStates;
-
-public class EnteringNumberState : ICalculatorState
+public class EnteringNumberState : CalculatorStateBase
 {
-    public void EnterNumber(CalculatorContext context, int number)
+    public EnteringNumberState(CalculatorContext context) : base(context) { }
+
+    public override void EnterNumber(char digit)
     {
-        CalculatorUtils.AppendNumber(context, number);
+        if (Context.CurrentInput == "0") Context.CurrentInput = digit.ToString();
+        else Context.CurrentInput += digit;
+    }
+
+
+    public override void EnterDot()
+    {
+        if (!Context.CurrentInput.Contains(".")) Context.CurrentInput += ".";
     }
 
     public void EnterOperation(CalculatorContext context, OperationType operation)
@@ -37,12 +44,6 @@ public class EnteringNumberState : ICalculatorState
         context.HistoryBuffer = context.MainBuffer;
         context.MainBuffer = context.CurrentValue.ToString();
         context.CurrentState = new ResultDisplayedState(); // Переход в состояние отображения результата
-    }
-
-    public void EnterDot(CalculatorContext context)
-    {
-        if (!context.MainBuffer.Contains("."))
-            context.MainBuffer += ".";
     }
 
     public void EraseLast(CalculatorContext context)
