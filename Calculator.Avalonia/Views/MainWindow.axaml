@@ -4,12 +4,22 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        d:DesignWidth="800"
-        d:DesignHeight="600"
+        Width="350"
+        Height="500"
         x:Class="Calculator.Avalonia.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="Calculator.Avalonia">
+
+
+  <Window.Styles>
+    <Style Selector="Window">
+      <Setter Property="MinWidth" Value="400"/>
+      <Setter Property="MinHeight" Value="600"/>
+      <Setter Property="MaxWidth" Value="400"/>
+      <Setter Property="MaxHeight" Value="600"/>
+    </Style>
+  </Window.Styles>
 
   <Design.DataContext>
     <vm:MainWindowViewModel />
