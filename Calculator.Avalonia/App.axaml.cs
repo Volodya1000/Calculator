@@ -10,8 +10,6 @@ namespace Calculator.Avalonia;
 
 public partial class App : Application
 {
-    public static ServiceProvider ServiceProvider { get; private set; }
-
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -19,21 +17,9 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        var collection = new ServiceCollection();
-
-        var operations = new OperationsBuilder().AddAll().Build();
-        collection.AddSingleton<Calculator.Core.Calculator>(provider =>
-             new Calculator.Core.Calculator(operations));
-
-        ServiceProvider = collection.BuildServiceProvider();
-
-
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = new MainWindowViewModel(),
-            };
+            desktop.MainWindow = Program.ServiceProvider.GetRequiredService<MainWindow>();
         }
 
         base.OnFrameworkInitializationCompleted();

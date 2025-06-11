@@ -5,7 +5,7 @@ using Calculator.Core.ResultPattern;
 
 namespace Calculator.Core;
 
-public class ExpressionsCalculatorFacade
+public class ExpressionsCalculatorFacade : IExpressionCalculator
 {
     private readonly Dictionary<string, IOperation> _operations;
     private readonly ExpressionTokenizer _tokenizer;
@@ -25,13 +25,13 @@ public class ExpressionsCalculatorFacade
     //    _evaluator= evaluator;
     //}
 
-    public ExpressionsCalculatorFacade(Dictionary<string, IOperation> operations, 
+    public ExpressionsCalculatorFacade(Dictionary<string, IOperation> operations,
                                        Dictionary<string, double> constants)
     {
         _operations = new Dictionary<string, IOperation>(
             operations,
             StringComparer.OrdinalIgnoreCase);
-        _tokenizer = new ExpressionTokenizer(operations.Keys.ToList(), constants.Keys.ToList()); 
+        _tokenizer = new ExpressionTokenizer(operations.Keys.ToList(), constants.Keys.ToList());
         _parser = new PrattParser(operations);
         _evaluator = new ExpressionEvaluator.ExpressionEvaluator(operations, constants);
     }

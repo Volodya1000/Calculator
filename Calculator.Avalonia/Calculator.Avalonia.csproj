@@ -29,4 +29,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Calculator.Core\Calculator.Core.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\Interfaces\" />
+  </ItemGroup>
 </Project>

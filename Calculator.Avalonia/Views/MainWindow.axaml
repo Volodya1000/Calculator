@@ -35,16 +35,10 @@
     <vm:MainWindowViewModel />
   </Design.DataContext>
 
-  <Grid RowDefinitions="auto, auto, *">
-    <!-- Меню -->
-    <Menu Grid.Row="0">
-      <MenuItem Header="File">
-        <MenuItem Header="Exit" Command="{Binding ExitCommand}"/>
-      </MenuItem>
-    </Menu>
+  <Grid RowDefinitions="auto, *">
 
     <!-- Дисплей -->
-    <Grid Grid.Row="1" RowDefinitions="auto,auto" Margin="10">
+    <Grid Grid.Row="0" RowDefinitions="auto,auto" Margin="10">
       <TextBlock Grid.Row="0"
                  Text="{Binding ExpressionBuffer}"
                  TextAlignment="Right"
@@ -57,54 +51,54 @@
     </Grid>
 
     <!-- Кнопки калькулятора -->
-    <UniformGrid Grid.Row="2" Columns="5" Margin="10">
+    <UniformGrid Grid.Row="1" Columns="5" Margin="10">
       <!-- ROW 0 -->
       <Button Content="AC" Command="{Binding ClearCommand}"/>
       <Button Content="RAD" Command="{Binding ToggleDegRadCommand}"/>
-      <Button Content="(" Command="{Binding AddParenthesisCommand}" CommandParameter="("/>
-      <Button Content=")" Command="{Binding AddParenthesisCommand}" CommandParameter=")"/>
+      <Button Content="(" Command="{Binding EnterSymbolCommand}" CommandParameter="("/>
+      <Button Content=")" Command="{Binding EnterSymbolCommand}" CommandParameter=")"/>
       <Button Content="⌫" Command="{Binding RemoveLastNumberCommand}"/>
 
       <!-- ROW 1 -->
-      <Button Content="e" Command="{Binding AddConstantCommand}" CommandParameter="e"/>
-      <Button Content="log" Command="{Binding AddFunctionCommand}" CommandParameter="log"/>
-      <Button Content="sin" Command="{Binding AddFunctionCommand}" CommandParameter="sin"/>
-      <Button Content="cos" Command="{Binding AddFunctionCommand}" CommandParameter="cos"/>
-      <Button Content="tan" Command="{Binding AddFunctionCommand}" CommandParameter="tan"/>
+      <Button Content="e" Command="{Binding EnterSymbolCommand}" CommandParameter="e"/>
+      <Button Content="log" Command="{Binding EnterFunctionCommand}" CommandParameter="log"/>
+      <Button Content="sin" Command="{Binding EnterFunctionCommand}" CommandParameter="sin"/>
+      <Button Content="cos" Command="{Binding EnterFunctionCommand}" CommandParameter="cos"/>
+      <Button Content="tan" Command="{Binding EnterFunctionCommand}" CommandParameter="tan"/>
 
       <!-- ROW 2 -->
-      <Button Content="1/x" Command="{Binding ExecuteOperation}" CommandParameter="1/x"/>
-      <Button Content="π" Command="{Binding AddConstantCommand}" CommandParameter="π"/>
-      <Button Content="+/−" Command="{Binding ToggleSignCommand}"/>
-      <Button Content="%" Command="{Binding ExecuteOperation}" CommandParameter="%"/>
-      <Button Content="÷" Command="{Binding AddOperationCommand}" CommandParameter="/" />
+      <Button Content="1/x" Command="{Binding EnterSymbolCommand}" CommandParameter="1/x"/>
+      <Button Content="π" Command="{Binding EnterSymbolCommand}" CommandParameter="π"/>
+      <Button Content="+/−" Command="{Binding EnterSymbolCommand}"/>
+      <Button Content="%" Command="{Binding EnterSymbolCommand}" CommandParameter="%"/>
+      <Button Content="÷" Command="{Binding EnterSymbolCommand}" CommandParameter="/" />
 
       <!-- ROW 3 -->
-      <Button Content="√x" Command="{Binding ExecuteOperation}" CommandParameter="sqrt"/>
-      <Button Content="7" Command="{Binding AddNumberCommand}" CommandParameter="7"/>
-      <Button Content="8" Command="{Binding AddNumberCommand}" CommandParameter="8"/>
-      <Button Content="9" Command="{Binding AddNumberCommand}" CommandParameter="9"/>
-      <Button Content="×" Command="{Binding AddOperationCommand}" CommandParameter="*" />
+      <Button Content="√x" Command="{Binding EnterFunctionCommand}" CommandParameter="sqrt"/>
+      <Button Content="7" Command="{Binding EnterSymbolCommand}" CommandParameter="7"/>
+      <Button Content="8" Command="{Binding EnterSymbolCommand}" CommandParameter="8"/>
+      <Button Content="9" Command="{Binding EnterSymbolCommand}" CommandParameter="9"/>
+      <Button Content="×" Command="{Binding EnterSymbolCommand}" CommandParameter="*" />
 
       <!-- ROW 4 -->
-      <Button Content="x!" Command="{Binding ExecuteOperation}" CommandParameter="fact"/>
-      <Button Content="4" Command="{Binding AddNumberCommand}" CommandParameter="4"/>
-      <Button Content="5" Command="{Binding AddNumberCommand}" CommandParameter="5"/>
-      <Button Content="6" Command="{Binding AddNumberCommand}" CommandParameter="6"/>
-      <Button Content="−" Command="{Binding AddOperationCommand}" CommandParameter="-" />
+      <Button Content="x!" Command="{Binding EnterFunctionCommand}" CommandParameter="fact"/>
+      <Button Content="4" Command="{Binding EnterSymbolCommand}" CommandParameter="4"/>
+      <Button Content="5" Command="{Binding EnterSymbolCommand}" CommandParameter="5"/>
+      <Button Content="6" Command="{Binding EnterSymbolCommand}" CommandParameter="6"/>
+      <Button Content="−" Command="{Binding EnterSymbolCommand}" CommandParameter="-" />
 
       <!-- ROW 5 -->
-      <Button Content="xʸ" Command="{Binding ExecuteOperation}" CommandParameter="^"/>
-      <Button Content="1" Command="{Binding AddNumberCommand}" CommandParameter="1"/>
-      <Button Content="2" Command="{Binding AddNumberCommand}" CommandParameter="2"/>
-      <Button Content="3" Command="{Binding AddNumberCommand}" CommandParameter="3"/>
-      <Button Content="+" Command="{Binding AddOperationCommand}" CommandParameter="+" />
+      <Button Content="xʸ" Command="{Binding EnterSymbolCommand}" CommandParameter="^"/>
+      <Button Content="1" Command="{Binding EnterSymbolCommand}" CommandParameter="1"/>
+      <Button Content="2" Command="{Binding EnterSymbolCommand}" CommandParameter="2"/>
+      <Button Content="3" Command="{Binding EnterSymbolCommand}" CommandParameter="3"/>
+      <Button Content="+" Command="{Binding EnterSymbolCommand}" CommandParameter="+" />
 
       <!-- ROW 6 -->
-      <Button Content="x²" Command="{Binding ExecuteOperation}" CommandParameter="^2"/>
-      <Button Content="00" Command="{Binding AddNumberCommand}" CommandParameter="00"/>
-      <Button Content="." Command="{Binding AddDecimalPointCommand}"/>
-      <Button Content="0" Command="{Binding AddNumberCommand}" CommandParameter="0"/>
+      <Button Content="x²" Command="{Binding EnterSymbolCommand}" CommandParameter="^2"/>
+      <Button Content="," Command="{Binding EnterSymbolCommand}" CommandParameter=","/>
+      <Button Content="." Command="{Binding EnterSymbolCommand}" CommandParameter="."/>
+      <Button Content="0" Command="{Binding EnterSymbolCommand}" CommandParameter="0"/>
       <Button Content="=" Command="{Binding ExecuteOperation}" CommandParameter="="/>
     </UniformGrid>
   </Grid>

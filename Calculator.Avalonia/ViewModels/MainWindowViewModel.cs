@@ -1,14 +1,64 @@
 ﻿namespace Calculator.Avalonia.ViewModels;
 
-using System.Reactive;
+using Calculator.Core;
+using Calculator.Core.Interfaces;
 using ReactiveUI;
+using System;
+using System.Reactive;
 
 
 public class MainWindowViewModel : ReactiveObject
 {
+    private readonly IExpressionCalculator _calculator;
+
+    public MainWindowViewModel(IExpressionCalculator calculator)
+    {
+        _calculator = calculator;
+
+        ClearCommand = ReactiveCommand.Create(() =>
+        {
+            ExpressionBuffer = "";
+            ShownValue = "0";
+        });
+
+        RemoveLastNumberCommand = ReactiveCommand.Create(() =>
+        {
+            if (ExpressionBuffer.Length > 0)
+            {
+                ExpressionBuffer = ExpressionBuffer[..^1];
+            }
+        });
+
+        ToggleDegRadCommand = ReactiveCommand.Create(() =>
+        {
+            IsDegSelected = !IsDegSelected;
+        });
+
+        ExecuteOperation = ReactiveCommand.Create(() =>
+        {
+            try
+            {
+                ShownValue = _calculator.EvaluateExpression(ExpressionBuffer).Value.ToString();
+            }
+            catch (Exception ex)
+            {
+                ShownValue = "Error";
+            }
+        });
+
+        EnterSymbolCommand = ReactiveCommand.Create<string>(symbol =>
+        {
+            ExpressionBuffer += symbol;
+        });
+
+        EnterFunctionCommand = ReactiveCommand.Create<string>(function =>
+        {
+            ExpressionBuffer += function + "(";
+        });
+    }
+
     private string _shownValue = "0";
-    private string _expressionBuffer ="2+2*(1-sin(30))";
-    private bool _isRadians;
+    private string _expressionBuffer ="";
 
     public string ShownValue
     {
@@ -22,66 +72,21 @@ public class MainWindowViewModel : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref _expressionBuffer, value);
     }
 
-    public bool IsRadians
-    {
-        get => _isRadians;
-        set
-        {
-            if (this.RaiseAndSetIfChanged(ref _isRadians, value))
-            {
-                if (value)
-                    IsDegSelected = false;
-            }
-        }
-    }
-
     private bool _isDegSelected = true;
 
     public bool IsDegSelected
     {
         get => _isDegSelected;
-        set
-        {
-            if (this.RaiseAndSetIfChanged(ref _isDegSelected, value))
-            {
-                if (value)
-                    IsRadians = false;
-            }
-        }
+        set => this.RaiseAndSetIfChanged(ref _isDegSelected, value);
     }
 
     // --- Команды ---
     public ReactiveCommand<Unit, Unit> ClearCommand { get; }
     public ReactiveCommand<Unit, Unit> RemoveLastNumberCommand { get; }
-    public ReactiveCommand<Unit, Unit> AddDecimalPointCommand { get; }
-    public ReactiveCommand<Unit, Unit> ToggleSignCommand { get; }
     public ReactiveCommand<Unit, Unit> ToggleDegRadCommand { get; }
-    public ReactiveCommand<Unit, Unit> ExitCommand { get; }
+    public ReactiveCommand<Unit, Unit> ExecuteOperation { get; }
 
-    public ReactiveCommand<string, Unit> AddOperationCommand { get; }
-    public ReactiveCommand<string, Unit> ExecuteOperation { get; }
-    public ReactiveCommand<string, Unit> AddFunctionCommand { get; }
-    public ReactiveCommand<string, Unit> AddConstantCommand { get; }
+    public ReactiveCommand<string, Unit> EnterSymbolCommand { get; }
+    public ReactiveCommand<string, Unit> EnterFunctionCommand { get; }
 
-    public ReactiveCommand<string, Unit> AddNumberCommand { get; }
-    public ReactiveCommand<string, Unit> AddParenthesisCommand { get; }
-    
-
-    // --- Конструктор ---
-    public MainWindowViewModel()
-    {
-        // --- Инициализация команд ---
-        ClearCommand = ReactiveCommand.Create(() => { });
-        RemoveLastNumberCommand = ReactiveCommand.Create(() => { });
-        AddDecimalPointCommand = ReactiveCommand.Create(() => { });
-        ToggleSignCommand = ReactiveCommand.Create(() => { });
-        ToggleDegRadCommand = ReactiveCommand.Create(() => { });
-        ExitCommand = ReactiveCommand.Create(() => { });
-
-        AddOperationCommand = ReactiveCommand.Create<string>(_ => { });
-        ExecuteOperation = ReactiveCommand.Create<string>(_ => { });
-        AddFunctionCommand = ReactiveCommand.Create<string>(_ => { });
-        AddConstantCommand = ReactiveCommand.Create<string>(_ => { });
-        AddNumberCommand = ReactiveCommand.Create<string>(_ => { });
-    }
 }
