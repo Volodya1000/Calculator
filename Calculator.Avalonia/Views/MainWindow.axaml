@@ -8,6 +8,12 @@
         Height="600"
         Icon="/Assets/avalonia-logo.ico">
 
+  <Window.Resources>
+    <SolidColorBrush x:Key="LightGrayBrush" Color="#D3D3D3"/>
+    <SolidColorBrush x:Key="OrangeBrush" Color="#FF6200"/>
+    <SolidColorBrush x:Key="SoftOrangeBrush" Color="#FFE0B2"/>
+  </Window.Resources>
+
   <Window.Styles>
     <Style Selector="Window">
       <Setter Property="MinWidth" Value="400"/>
@@ -22,21 +28,30 @@
       <Setter Property="FontSize" Value="18"/>
       <Setter Property="HorizontalContentAlignment" Value="Center"/>
       <Setter Property="VerticalContentAlignment" Value="Center"/>
-      <Setter Property="Background" Value="#2196F3"/>
-      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="Background" Value="{StaticResource SoftOrangeBrush}"/>
+      <Setter Property="Foreground" Value="{StaticResource OrangeBrush}"/>
       <Setter Property="BorderThickness" Value="0"/>
       <Setter Property="Cursor" Value="Hand"/>
       <Setter Property="HorizontalAlignment" Value="Stretch"/>
       <Setter Property="VerticalAlignment" Value="Stretch"/>
     </Style>
+    <!-- Стиль для кнопок цифр, точки и запятой -->
+    <Style Selector="Button.digit">
+      <Setter Property="Background" Value="{StaticResource LightGrayBrush}"/>
+      <Setter Property="Foreground" Value="Black"/>
+    </Style>
+    <!-- Стиль для кнопки равно -->
+    <Style Selector="Button.equals">
+      <Setter Property="Background" Value="{StaticResource OrangeBrush}"/>
+      <Setter Property="Foreground" Value="White"/>
+    </Style>
   </Window.Styles>
 
-    <Design.DataContext>
+  <Design.DataContext>
     <vm:MainWindowViewModel />
   </Design.DataContext>
 
   <Grid RowDefinitions="auto, *">
-
     <!-- Дисплей -->
     <Grid Grid.Row="0" RowDefinitions="auto,auto" Margin="10">
       <TextBlock Grid.Row="0"
@@ -75,31 +90,31 @@
 
       <!-- ROW 3 -->
       <Button Content="√x" Command="{Binding EnterFunctionCommand}" CommandParameter="sqrt"/>
-      <Button Content="7" Command="{Binding EnterSymbolCommand}" CommandParameter="7"/>
-      <Button Content="8" Command="{Binding EnterSymbolCommand}" CommandParameter="8"/>
-      <Button Content="9" Command="{Binding EnterSymbolCommand}" CommandParameter="9"/>
+      <Button Classes="digit" Content="7" Command="{Binding EnterSymbolCommand}" CommandParameter="7"/>
+      <Button Classes="digit" Content="8" Command="{Binding EnterSymbolCommand}" CommandParameter="8"/>
+      <Button Classes="digit" Content="9" Command="{Binding EnterSymbolCommand}" CommandParameter="9"/>
       <Button Content="×" Command="{Binding EnterSymbolCommand}" CommandParameter="*" />
 
       <!-- ROW 4 -->
       <Button Content="x!" Command="{Binding EnterFunctionCommand}" CommandParameter="fact"/>
-      <Button Content="4" Command="{Binding EnterSymbolCommand}" CommandParameter="4"/>
-      <Button Content="5" Command="{Binding EnterSymbolCommand}" CommandParameter="5"/>
-      <Button Content="6" Command="{Binding EnterSymbolCommand}" CommandParameter="6"/>
+      <Button Classes="digit" Content="4" Command="{Binding EnterSymbolCommand}" CommandParameter="4"/>
+      <Button Classes="digit" Content="5" Command="{Binding EnterSymbolCommand}" CommandParameter="5"/>
+      <Button Classes="digit" Content="6" Command="{Binding EnterSymbolCommand}" CommandParameter="6"/>
       <Button Content="−" Command="{Binding EnterSymbolCommand}" CommandParameter="-" />
 
       <!-- ROW 5 -->
       <Button Content="xʸ" Command="{Binding EnterSymbolCommand}" CommandParameter="^"/>
-      <Button Content="1" Command="{Binding EnterSymbolCommand}" CommandParameter="1"/>
-      <Button Content="2" Command="{Binding EnterSymbolCommand}" CommandParameter="2"/>
-      <Button Content="3" Command="{Binding EnterSymbolCommand}" CommandParameter="3"/>
+      <Button Classes="digit" Content="1" Command="{Binding EnterSymbolCommand}" CommandParameter="1"/>
+      <Button Classes="digit" Content="2" Command="{Binding EnterSymbolCommand}" CommandParameter="2"/>
+      <Button Classes="digit" Content="3" Command="{Binding EnterSymbolCommand}" CommandParameter="3"/>
       <Button Content="+" Command="{Binding EnterSymbolCommand}" CommandParameter="+" />
 
       <!-- ROW 6 -->
       <Button Content="x²" Command="{Binding EnterSymbolCommand}" CommandParameter="^2"/>
-      <Button Content="," Command="{Binding EnterSymbolCommand}" CommandParameter=","/>
-      <Button Content="." Command="{Binding EnterSymbolCommand}" CommandParameter="."/>
-      <Button Content="0" Command="{Binding EnterSymbolCommand}" CommandParameter="0"/>
-      <Button Content="=" Command="{Binding ExecuteOperation}"/>
+      <Button Classes="digit" Content="," Command="{Binding EnterSymbolCommand}" CommandParameter=","/>
+      <Button Classes="digit" Content="." Command="{Binding EnterSymbolCommand}" CommandParameter="."/>
+      <Button Classes="digit" Content="0" Command="{Binding EnterSymbolCommand}" CommandParameter="0"/>
+      <Button Classes="equals" Content="=" Command="{Binding ExecuteOperation}"/>
     </UniformGrid>
   </Grid>
 </Window>
