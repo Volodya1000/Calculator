@@ -6,7 +6,7 @@ namespace Calculator.Core;
 public class Operation : IOperation
 {
     private readonly Func<double[], double> _function;
-    private readonly int _requiredArgs;
+    public int ArgsCount { get; init;}
 
     //Имя позволяет иметь различные ключи для вызова операции и для её описания, напрмер в исключениях. Я бы добавил имя и RequiredArgs в IOperation
     private readonly string _name;
@@ -15,14 +15,14 @@ public class Operation : IOperation
     {
         _name = name;
         _function = function ?? throw new ArgumentNullException(nameof(function));
-        _requiredArgs = requiredArgs;
+        ArgsCount = requiredArgs;
     }
 
     public double Call(params double[] args)
     {
         if (args == null) throw new ArgumentNullException(nameof(args));
-        if (args.Length < _requiredArgs)
-            throw new InsufficientArgumentsException(_name, _requiredArgs, args.Length);
+        if (args.Length < ArgsCount)
+            throw new InsufficientArgumentsException(_name, ArgsCount, args.Length);
 
         ValidateArguments(args);
         return ExecuteFunction(args);
