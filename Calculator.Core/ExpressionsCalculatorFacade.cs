@@ -12,19 +12,6 @@ public class ExpressionsCalculatorFacade : IExpressionCalculator
     private readonly PrattParser _parser;
     private readonly ExpressionEvaluator.ExpressionEvaluator _evaluator;
 
-    //public ExpressionsCalculatorFacade(Dictionary<string, IOperation> operations, 
-    //                  ExpressionTokenizer tokenizer,
-    //                  PrattParser parser,
-    //                  ExpressionEvaluator.ExpressionEvaluator evaluator)
-    //{
-    //    _operations = new Dictionary<string, IOperation>(
-    //        operations,
-    //        StringComparer.OrdinalIgnoreCase);
-    //    _tokenizer = tokenizer;
-    //    _parser = parser;
-    //    _evaluator= evaluator;
-    //}
-
     public ExpressionsCalculatorFacade(Dictionary<string, IOperation> operations,
                                        Dictionary<string, double> constants)
     {

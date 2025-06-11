@@ -69,7 +69,7 @@
       <!-- ROW 2 -->
       <Button Content="1/x" Command="{Binding EnterSymbolCommand}" CommandParameter="1/x"/>
       <Button Content="π" Command="{Binding EnterSymbolCommand}" CommandParameter="π"/>
-      <Button Content="+/−" Command="{Binding EnterSymbolCommand}"/>
+      <Button Content="atan2" Command="{Binding EnterSymbolCommand}" CommandParameter="atan2"/>
       <Button Content="%" Command="{Binding EnterSymbolCommand}" CommandParameter="%"/>
       <Button Content="÷" Command="{Binding EnterSymbolCommand}" CommandParameter="/" />
 
@@ -99,7 +99,7 @@
       <Button Content="," Command="{Binding EnterSymbolCommand}" CommandParameter=","/>
       <Button Content="." Command="{Binding EnterSymbolCommand}" CommandParameter="."/>
       <Button Content="0" Command="{Binding EnterSymbolCommand}" CommandParameter="0"/>
-      <Button Content="=" Command="{Binding ExecuteOperation}" CommandParameter="="/>
+      <Button Content="=" Command="{Binding ExecuteOperation}"/>
     </UniformGrid>
   </Grid>
 </Window>
