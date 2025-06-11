@@ -33,6 +33,7 @@ class Program
         // Добавляем специальный тестовый пример
         var testExpressions = new[]
         {
+            "1",
             "e + exp(e)",  // Проверяем различение e и exp
             "3*e - exp(2)",
             "exp(e^pi)",

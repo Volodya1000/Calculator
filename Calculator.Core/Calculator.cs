@@ -31,11 +31,6 @@ public class Calculator
         }
     }
 
-    public Result<double> ExecuteExpression(string operationName, params double[] args)
-    {
-      
-    }
-
     public bool OperationExists(string operation) => _operations.ContainsKey(operation);
 
     public IEnumerable<string> GetAvailableOperations()

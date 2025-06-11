@@ -60,7 +60,7 @@ public class OperationsBuilder
     public OperationsBuilder AddSpecialFunctions()
     {
         return this
-           .AddOperation("pow", Math.Pow)
+           .AddOperation("^", Math.Pow)
            .AddOperation("abs", Math.Abs);
     }
 

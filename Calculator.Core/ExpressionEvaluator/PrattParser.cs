@@ -26,12 +26,14 @@ public class PrattParser
     }
 
     //null используется в качестве маркера конца ввода 
-    public IEnumerable<Token> Parse(IEnumerable<Token> tokens)
+    public IEnumerable<Token> Parse(List<Token> tokens)
     {
         _tokens = tokens;
         _index = 0;
         _currentToken = _tokens.Count > 0 ? _tokens[0] : null;
         _rpn = new List<Token>();
+
+        ParseExpression();
 
         if (_index < _tokens.Count)
             throw new Exception($"extra tokens after end of expression ({_currentToken.Start})");
@@ -115,7 +117,7 @@ public class PrattParser
                 ParseFunctionExpression();
                 return;
             case TokenType.Constant:
-                _rpn.Add(Consume(TokenType.Constan));
+                _rpn.Add(Consume(TokenType.Constant));
                 return;
             default:
                 _rpn.Add(Consume(TokenType.Number));
@@ -156,7 +158,7 @@ public class PrattParser
         Consume(TokenType.LeftParenthesis);
         ParseExpression();
 
-        int argCount = _functions[token.Value].Args;
+        int argCount = _operations[token.Value].ArgsCount;
         for (int i = 1; i < argCount; i++)
         {
             Consume(TokenType.Delimiter);

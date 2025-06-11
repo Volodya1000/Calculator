@@ -12,7 +12,10 @@ public class ExpressionTokenizer
         string functionPattern = string.Join("|", functions.Select(Regex.Escape));
         //  \b нужно для точного распознавания констант без ложных срабатываний при частичном совпадении 
         // например чтоб e не было распознано в exp
-        string constantPattern = $@"\b({string.Join("|", constants.Select(Regex.Escape))})\b";
+        // если список констант пуст, то группа никогда не будет захвачена
+        string constantPattern = constants.Any()
+             ? $@"\b({string.Join("|", constants.Select(Regex.Escape))})\b"
+             : @"(?:)";
 
         string pattern = string.Join("|", new[]
         {

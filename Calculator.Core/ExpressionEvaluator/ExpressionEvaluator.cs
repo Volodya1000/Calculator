@@ -4,6 +4,7 @@ using Calculator.Core.Interfaces;
 namespace Calculator.Core.ExpressionEvaluator;
 
 public class ExpressionEvaluator
+
 {
     private readonly Dictionary<string, IOperation> _operations;
     private readonly Dictionary<string, double> _constants;
@@ -11,6 +12,7 @@ public class ExpressionEvaluator
     {
         _operations= operations;
         _constants= constants;
+        _operations.Add("~", new Operation("~", args =>(-1)*args[0],1));
     }
 
     public double Evaluate(IEnumerable<Token> rpn)
@@ -35,7 +37,11 @@ public class ExpressionEvaluator
                     throw new Exception($"got invalid token \"{token.Value}\" ({token.Start}:{token.End})");
             }
         }
-        return 0;
+
+        if (rpnStack.Count != 1)
+            throw new Exception("expression is invalid");
+
+        return rpnStack.Pop();
     }
 
     private void EvaluateConstant(Token token, Stack<double> rpnStack)
