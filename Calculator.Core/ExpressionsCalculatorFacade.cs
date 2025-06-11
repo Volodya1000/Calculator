@@ -12,31 +12,42 @@ public class ExpressionsCalculatorFacade
     private readonly PrattParser _parser;
     private readonly ExpressionEvaluator.ExpressionEvaluator _evaluator;
 
+    //public ExpressionsCalculatorFacade(Dictionary<string, IOperation> operations, 
+    //                  ExpressionTokenizer tokenizer,
+    //                  PrattParser parser,
+    //                  ExpressionEvaluator.ExpressionEvaluator evaluator)
+    //{
+    //    _operations = new Dictionary<string, IOperation>(
+    //        operations,
+    //        StringComparer.OrdinalIgnoreCase);
+    //    _tokenizer = tokenizer;
+    //    _parser = parser;
+    //    _evaluator= evaluator;
+    //}
+
     public ExpressionsCalculatorFacade(Dictionary<string, IOperation> operations, 
-                      ExpressionTokenizer tokenizer,
-                      PrattParser parser,
-                      ExpressionEvaluator.ExpressionEvaluator evaluator)
+                                       Dictionary<string, double> constants)
     {
         _operations = new Dictionary<string, IOperation>(
             operations,
             StringComparer.OrdinalIgnoreCase);
-        _tokenizer = tokenizer;
-        _parser = parser;
-        _evaluator= evaluator;
+        _tokenizer = new ExpressionTokenizer(operations.Keys.ToList(), constants.Keys.ToList()); 
+        _parser = new PrattParser(operations);
+        _evaluator = new ExpressionEvaluator.ExpressionEvaluator(operations, constants);
     }
 
     public Result<double> EvaluateExpression(string expression)
     {
-        //try
-        //{
+        try
+        {
             var tokens = _tokenizer.Tokenize(expression);
             var rpn = _parser.Parse(tokens.ToList());
             var result = _evaluator.Evaluate(rpn);
             return Result<double>.Success(result);
-        //}
-        //catch (Exception ex)
-        //{
-        //    return Result<double>.Failure(ex);
-        //}
+        }
+        catch (Exception ex)
+        {
+            return Result<double>.Failure(ex);
+        }
     }
 }

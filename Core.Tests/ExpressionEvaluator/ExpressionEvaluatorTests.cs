@@ -21,16 +21,9 @@ public class ExpressionEvaluatorTests
     public void ValidExpressions_EvaluateCorrectly(string expression, double expected)
     {
         var operationsDict = new OperationsBuilder().AddAll().Build();
-        var tolenizer = new ExpressionTokenizer(operationsDict.Keys.ToList(),
-          constants: new List<string>() { "a"});
-
-        var parser = new PrattParser(operationsDict);
-        var evaluator = new Calculator.Core.ExpressionEvaluator.ExpressionEvaluator(operationsDict, new Dictionary<string, double>());
-        var facade= new ExpressionsCalculatorFacade(operationsDict, tolenizer, parser, evaluator);
+        var facade= new ExpressionsCalculatorFacade(operationsDict, new Dictionary<string, double>());
         var result = facade.EvaluateExpression(expression);
-       
-       Assert.True(result.IsSuccess);
-
+        Assert.True(result.IsSuccess);
         Assert.Equal(expected, result.Value, Eps);
     }
 

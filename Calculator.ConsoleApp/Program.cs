@@ -17,58 +17,58 @@ using Microsoft.Extensions.DependencyInjection;
 //var consoleProcessor = serviceProvider.GetRequiredService<ConsoleProcessor>();
 //consoleProcessor.Run();
 
-using System;
-using System.Collections.Generic;
+//using System;
+//using System.Collections.Generic;
 
-class Program
-{
-    static void Main()
-    {
-        // Инициализация токенизатора с константой "e" и функцией "exp"
-        var tokenizer = new ExpressionTokenizer(
-            functions: new List<string> { "sin", "cos", "exp", "log" },
-            constants: new List<string> { "pi", "e" }
-        );
+//class Program
+//{
+//    static void Main()
+//    {
+//        // Инициализация токенизатора с константой "e" и функцией "exp"
+//        var tokenizer = new ExpressionTokenizer(
+//            functions: new List<string> { "sin", "cos", "exp", "log" },
+//            constants: new List<string> { "pi", "e" }
+//        );
 
-        // Добавляем специальный тестовый пример
-        var testExpressions = new[]
-        {
-            "1",
-            "e + exp(e)",  // Проверяем различение e и exp
-            "3*e - exp(2)",
-            "exp(e^pi)",
-            "expert",      // Проверяем, чтобы exp не находился внутри других слов
-            "some_variable"
-        };
+//        // Добавляем специальный тестовый пример
+//        var testExpressions = new[]
+//        {
+//            "1",
+//            "e + exp(e)",  // Проверяем различение e и exp
+//            "3*e - exp(2)",
+//            "exp(e^pi)",
+//            "expert",      // Проверяем, чтобы exp не находился внутри других слов
+//            "some_variable"
+//        };
 
-        foreach (var expr in testExpressions)
-        {
-            TestExpression(tokenizer, expr);
-        }
-    }
+//        foreach (var expr in testExpressions)
+//        {
+//            TestExpression(tokenizer, expr);
+//        }
+//    }
 
-    static void TestExpression(ExpressionTokenizer tokenizer, string expression)
-    {
-        Console.WriteLine($"\nТестируем выражение: {expression}");
-        Console.WriteLine(new string('-', 50));
+//    static void TestExpression(ExpressionTokenizer tokenizer, string expression)
+//    {
+//        Console.WriteLine($"\nТестируем выражение: {expression}");
+//        Console.WriteLine(new string('-', 50));
 
-        try
-        {
-            var tokens = tokenizer.Tokenize(expression);
+//        try
+//        {
+//            var tokens = tokenizer.Tokenize(expression);
 
-            Console.WriteLine($"{"Тип",-20} | {"Значение",-10} | Позиция");
-            Console.WriteLine(new string('-', 40));
+//            Console.WriteLine($"{"Тип",-20} | {"Значение",-10} | Позиция");
+//            Console.WriteLine(new string('-', 40));
 
-            foreach (var token in tokens)
-            {
-                Console.WriteLine($"{token.Type,-20} | {token.Value,-10} | [{token.Start}-{token.End}]");
-            }
-        }
-        catch (ArgumentException ex)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"Ошибка: {ex.Message}");
-            Console.ResetColor();
-        }
-    }
-}
+//            foreach (var token in tokens)
+//            {
+//                Console.WriteLine($"{token.Type,-20} | {token.Value,-10} | [{token.Start}-{token.End}]");
+//            }
+//        }
+//        catch (ArgumentException ex)
+//        {
+//            Console.ForegroundColor = ConsoleColor.Red;
+//            Console.WriteLine($"Ошибка: {ex.Message}");
+//            Console.ResetColor();
+//        }
+//    }
+//}

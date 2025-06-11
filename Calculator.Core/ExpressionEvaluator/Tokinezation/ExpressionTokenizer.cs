@@ -6,30 +6,40 @@ public class ExpressionTokenizer
 {
     private readonly Regex _regex;
 
+
     public ExpressionTokenizer(List<string> functions, List<string> constants)
     {
-        //Regex.Escape экранирует заданные строки , чтобы их можно было безопасно использовать в регулярном выражении
-        string functionPattern = string.Join("|", functions.Select(Regex.Escape));
-        //  \b нужно для точного распознавания констант без ложных срабатываний при частичном совпадении 
-        // например чтоб e не было распознано в exp
-        // если список констант пуст, то группа никогда не будет захвачена
-        string constantPattern = constants.Any()
-             ? $@"\b({string.Join("|", constants.Select(Regex.Escape))})\b"
-             : @"(?:)";
-
-        string pattern = string.Join("|", new[]
+        var patternParts = new List<string>
         {
             @"(?<LeftParenthesis>\()",
             @"(?<RightParenthesis>\))",
             @"(?<Delimiter>,)",
             @"(?<Operator>[-+*/^])",
-            $@"(?<Function>{functionPattern})",
-            $@"(?<Constant>{constantPattern})",
-            @"(?<Number>\d+(\.\d+)?)",
-            @"(?<Unknown>\S)"
-        });
+            @"(?<Number>\d+(\.\d+)?)" 
+        };
 
-        // Используем ExplicitCapture чтобы и гнорировать автоматически нумеруемые группы (только именованные через ?<name>)
+        //Regex.Escape экранирует заданные строки , чтобы их можно было безопасно использовать в регулярном выражении
+
+        // Добавляем функции, если они есть
+        if (functions != null && functions.Count > 0)
+        {
+            string functionPattern = string.Join("|", functions.Select(Regex.Escape));
+            patternParts.Add($@"(?<Function>{functionPattern})");
+        }
+
+        // Добавляем константы, если они есть
+        if (constants != null && constants.Count > 0)
+        {
+            string constantPattern = string.Join("|", constants.Select(Regex.Escape));
+            //  \b нужно для точного распознавания констант без ложных срабатываний при частичном совпадении 
+            // например чтоб e не было распознано в exp
+            patternParts.Add($@"(?<Constant>\b(?:{constantPattern})\b)");
+        }
+
+        // Unknown всегда в конце
+        patternParts.Add(@"(?<Unknown>\S)");
+
+        string pattern = string.Join("|", patternParts);
         _regex = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
     }
 
