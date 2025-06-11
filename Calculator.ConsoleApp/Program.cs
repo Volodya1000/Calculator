@@ -24,24 +24,22 @@ class Program
 {
     static void Main()
     {
-        // Инициализация токенизатора
+        // Инициализация токенизатора с константой "e" и функцией "exp"
         var tokenizer = new ExpressionTokenizer(
-            functions: new List<string> { "sin", "cos", "tan", "sqrt", "log" },
+            functions: new List<string> { "sin", "cos", "exp", "log" },
             constants: new List<string> { "pi", "e" }
         );
 
-        // Список тестовых выражений
+        // Добавляем специальный тестовый пример
         var testExpressions = new[]
         {
-            "3 + 4 * 2 / (1 - 5)^2",
-            "sin(pi/2) + cos(0)",
-            "sqrt(16) * log(e^3)",
-            "a * x^2 + b * x + c",
-            "invalid @ symbol",
-            "2.5 * (3 + e) / tan(0.5)"
+            "e + exp(e)",  // Проверяем различение e и exp
+            "3*e - exp(2)",
+            "exp(e^pi)",
+            "expert",      // Проверяем, чтобы exp не находился внутри других слов
+            "some_variable"
         };
 
-        // Тестирование каждого выражения
         foreach (var expr in testExpressions)
         {
             TestExpression(tokenizer, expr);
