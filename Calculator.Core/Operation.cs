@@ -1,4 +1,5 @@
-﻿using Calculator.Core.Error;
+﻿using Calculator.Core.Exceptions;
+using Calculator.Core.Exceptions.OperationExceptions;
 using Calculator.Core.Interfaces;
 
 namespace Calculator.Core;
@@ -47,10 +48,10 @@ public class Operation : IOperation
             double result = _function(args);
 
             if (double.IsNaN(result))
-                throw new ExecutingCalculationException(_name, "Result is not a number (NaN)");
+                throw new ExecutingOperationException(_name, "Result is not a number (NaN)");
 
             if (double.IsInfinity(result))
-                throw new ExecutingCalculationException(_name, "Result is infinite");
+                throw new ExecutingOperationException(_name, "Result is infinite");
 
             return result;
         }
@@ -58,13 +59,13 @@ public class Operation : IOperation
         {
             throw new InvalidCalculatorArgumentException(_name, ex.Message,ex.Arg,ex.ArgIndex);
         }
-        catch (CalculatorException)
+        catch (OperationException)
         {
             throw;
         }
         catch (Exception ex)
         {
-            throw new ExecutingCalculationException(_name, $"Operation failed: {ex.Message}");
+            throw new ExecutingOperationException(_name, $"Operation failed: {ex.Message}");
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace Calculator.Core.Error;
+﻿namespace Calculator.Core.Exceptions.OperationExceptions;
 
-public class InsufficientArgumentsException: CalculatorException 
+public class InsufficientArgumentsException: OperationException 
 {
     public int Expected {  get; }
 

@@ -1,4 +1,4 @@
-﻿using Calculator.Core.Error;
+﻿using Calculator.Core.Exceptions;
 
 namespace Calculator.Core.ResultPattern;
 

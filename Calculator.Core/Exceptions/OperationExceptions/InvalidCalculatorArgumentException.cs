@@ -1,6 +1,6 @@
-﻿namespace Calculator.Core.Error;
+﻿namespace Calculator.Core.Exceptions.OperationExceptions;
 
-public class InvalidCalculatorArgumentException:CalculatorException
+public class InvalidCalculatorArgumentException:OperationException
 {
     public double Arg { get; }
 

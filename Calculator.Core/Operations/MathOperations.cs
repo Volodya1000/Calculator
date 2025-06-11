@@ -1,4 +1,5 @@
-﻿using Calculator.Core.Error;
+﻿using Calculator.Core.Exceptions;
+using Calculator.Core.Exceptions.OperationExceptions;
 
 namespace Calculator.Core.Operations;
 

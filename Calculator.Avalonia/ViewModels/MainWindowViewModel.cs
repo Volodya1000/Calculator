@@ -1,11 +1,9 @@
-﻿namespace Calculator.Avalonia.ViewModels;
-
-using Calculator.Core;
-using Calculator.Core.Interfaces;
+﻿using Calculator.Core.Interfaces;
 using ReactiveUI;
-using System;
+using System.Text;
 using System.Reactive;
 
+namespace Calculator.Avalonia.ViewModels;
 
 public class MainWindowViewModel : ReactiveObject
 {
@@ -17,15 +15,17 @@ public class MainWindowViewModel : ReactiveObject
 
         ClearCommand = ReactiveCommand.Create(() =>
         {
-            ExpressionBuffer = "";
+            ExpressionBuilder.Clear();
             ShownValue = "0";
+            this.RaisePropertyChanged(nameof(Expression));
         });
 
         RemoveLastNumberCommand = ReactiveCommand.Create(() =>
         {
-            if (ExpressionBuffer.Length > 0)
+            if (ExpressionBuilder.Length > 0)
             {
-                ExpressionBuffer = ExpressionBuffer[..^1];
+                ExpressionBuilder.Length--;
+                this.RaisePropertyChanged(nameof(Expression));
             }
         });
 
@@ -36,29 +36,33 @@ public class MainWindowViewModel : ReactiveObject
 
         ExecuteOperation = ReactiveCommand.Create(() =>
         {
-            try
-            {
-                ShownValue = _calculator.EvaluateExpression(ExpressionBuffer).Value.ToString();
-            }
-            catch (Exception ex)
-            {
-                ShownValue = "Error";
-            }
+            var result = _calculator.EvaluateExpression(ExpressionBuilder.ToString());
+            if (result.IsSuccess)
+                ShownValue = result.Value.ToString();
+            else
+                ShownValue = result.Error.Message;
         });
 
         EnterSymbolCommand = ReactiveCommand.Create<string>(symbol =>
         {
-            ExpressionBuffer += symbol;
+            ExpressionBuilder.Append(symbol);
+            this.RaisePropertyChanged(nameof(Expression));
         });
 
         EnterFunctionCommand = ReactiveCommand.Create<string>(function =>
         {
-            ExpressionBuffer += function + "(";
+            ExpressionBuilder.Append(function).Append('(');
+            this.RaisePropertyChanged(nameof(Expression));
         });
     }
 
+    private StringBuilder ExpressionBuilder { get; } = new StringBuilder();
+
+    // Для привязки к интерфейсу
+    public string Expression => ExpressionBuilder.ToString();
+
     private string _shownValue = "0";
-    private string _expressionBuffer ="";
+    private bool _isDegSelected = true;
 
     public string ShownValue
     {
@@ -66,21 +70,12 @@ public class MainWindowViewModel : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref _shownValue, value);
     }
 
-    public string ExpressionBuffer
-    {
-        get => _expressionBuffer;
-        set => this.RaiseAndSetIfChanged(ref _expressionBuffer, value);
-    }
-
-    private bool _isDegSelected = true;
-
     public bool IsDegSelected
     {
         get => _isDegSelected;
         set => this.RaiseAndSetIfChanged(ref _isDegSelected, value);
     }
 
-    // --- Команды ---
     public ReactiveCommand<Unit, Unit> ClearCommand { get; }
     public ReactiveCommand<Unit, Unit> RemoveLastNumberCommand { get; }
     public ReactiveCommand<Unit, Unit> ToggleDegRadCommand { get; }
@@ -88,5 +83,4 @@ public class MainWindowViewModel : ReactiveObject
 
     public ReactiveCommand<string, Unit> EnterSymbolCommand { get; }
     public ReactiveCommand<string, Unit> EnterFunctionCommand { get; }
-
 }
