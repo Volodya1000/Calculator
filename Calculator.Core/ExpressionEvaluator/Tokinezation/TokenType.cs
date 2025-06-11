@@ -9,6 +9,5 @@ public enum TokenType
     Function,
     Constant,
     Number,
-    Variable,
     Unknown
 }

@@ -23,7 +23,6 @@ public class ExpressionTokenizer
             $@"(?<Function>{functionPattern})",
             $@"(?<Constant>{constantPattern})",
             @"(?<Number>\d+(\.\d+)?)",
-            @"(?<Variable>[a-z]\w*)",
             @"(?<Unknown>\S)"
         });
 

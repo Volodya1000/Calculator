@@ -1,4 +1,5 @@
 ﻿using Calculator.Core.Error;
+using Calculator.Core.ExpressionEvaluator.Tokinezation;
 using Calculator.Core.Interfaces;
 using Calculator.Core.ResultPattern;
 
@@ -28,6 +29,11 @@ public class Calculator
         {
             return Result<double>.Failure(ex);
         }
+    }
+
+    public Result<double> ExecuteExpression(string operationName, params double[] args)
+    {
+      
     }
 
     public bool OperationExists(string operation) => _operations.ContainsKey(operation);
