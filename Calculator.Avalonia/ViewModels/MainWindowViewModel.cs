@@ -2,7 +2,6 @@
 using ReactiveUI;
 using System.Globalization;
 using System.Reactive;
-using System.Text;
 
 namespace Calculator.Avalonia.ViewModels
 {
@@ -13,10 +12,10 @@ namespace Calculator.Avalonia.ViewModels
         public MainWindowViewModel(IExpressionCalculator calculator)
         {
             _calculator = calculator;
-           
+
             ExecuteOperation = ReactiveCommand.Create(() =>
             {
-                var result = _calculator.EvaluateExpression(ExpressionBuilder.ToString());
+                var result = _calculator.EvaluateExpression(Expression);
                 if (result.IsSuccess)
                 {
                     ShownValue = result.Value.ToString(CultureInfo.InvariantCulture);
@@ -29,41 +28,38 @@ namespace Calculator.Avalonia.ViewModels
 
             EnterSymbolCommand = ReactiveCommand.Create<string>(symbol =>
             {
-                ExpressionBuilder.Append(symbol);
-                this.RaisePropertyChanged(nameof(Expression));
+                Expression += symbol;
             });
 
             ClearCommand = ReactiveCommand.Create(() =>
             {
-                ExpressionBuilder.Clear();
+                Expression = "";
                 ShownValue = "0";
-                this.RaisePropertyChanged(nameof(Expression));
             });
 
             RemoveLastNumberCommand = ReactiveCommand.Create(() =>
             {
-                if (ExpressionBuilder.Length > 0)
+                if (!string.IsNullOrEmpty(Expression))
                 {
-                      string updatedExpression = _calculator.GetStringAfterErasingLastToken(Expression);
-        ExpressionBuilder.Clear().Append(updatedExpression);
-        this.RaisePropertyChanged(nameof(Expression));
+                    string updatedExpression = _calculator.GetStringAfterErasingLastToken(Expression);
+                    Expression = updatedExpression;
                 }
             });
 
             EnterFunctionCommand = ReactiveCommand.Create<string>(function =>
             {
-                ExpressionBuilder.Append(function).Append('(');
-                this.RaisePropertyChanged(nameof(Expression));
+                Expression += function + "(";
             });
-           
         }
 
-        private StringBuilder ExpressionBuilder { get; set; } = new StringBuilder();
-
-        public string Expression => ExpressionBuilder.ToString();
+        private string _expression = "";
+        public string Expression
+        {
+            get => _expression;
+            set => this.RaiseAndSetIfChanged(ref _expression, value);
+        }
 
         private string _shownValue = "0";
-
         public string ShownValue
         {
             get => _shownValue;
@@ -72,9 +68,7 @@ namespace Calculator.Avalonia.ViewModels
 
         public ReactiveCommand<Unit, Unit> ClearCommand { get; }
         public ReactiveCommand<Unit, Unit> RemoveLastNumberCommand { get; }
-        public ReactiveCommand<Unit, Unit> ToggleDegRadCommand { get; }
         public ReactiveCommand<Unit, Unit> ExecuteOperation { get; }
-
         public ReactiveCommand<string, Unit> EnterSymbolCommand { get; }
         public ReactiveCommand<string, Unit> EnterFunctionCommand { get; }
     }
