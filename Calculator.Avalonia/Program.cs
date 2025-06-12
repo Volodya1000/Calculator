@@ -1,10 +1,9 @@
 ﻿using Avalonia;
 using Avalonia.ReactiveUI;
-using Calculator.Avalonia.ViewModels;
 using Calculator.Avalonia.Views;
 using Calculator.Core;
 using Calculator.Core.Interfaces;
-using Calculator.Core.Operations;
+using Calculator.Core.Builders;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -15,9 +14,6 @@ internal sealed class Program
 {
     public static IServiceProvider ServiceProvider { get; private set; }
 
-    // Initialization code. Don't use any Avalonia, third-party APIs or any
-    // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
-    // yet and stuff might break.
     [STAThread]
     public static void Main(string[] args)
     {
@@ -32,7 +28,7 @@ internal sealed class Program
     private static void ConfigureServices(IServiceCollection services)
     {
         var operations = new OperationsBuilder().AddAll().Build();
-        var constants = new Dictionary<string, double>();
+        var constants = new ConstantsBuilder().AddMathConstants().Build();
 
         services.AddTransient<IExpressionCalculator>(provider => new ExpressionsCalculatorFacade(operations, constants));
         services.AddTransient<MainWindow>();

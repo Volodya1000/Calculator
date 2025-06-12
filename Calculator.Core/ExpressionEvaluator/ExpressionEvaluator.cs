@@ -2,6 +2,7 @@
 using Calculator.Core.Exceptions.OperationExceptions;
 using Calculator.Core.ExpressionEvaluator.Tokinezation;
 using Calculator.Core.Interfaces;
+using Calculator.Core.Operations;
 using System.Globalization;
 
 namespace Calculator.Core.ExpressionEvaluator;

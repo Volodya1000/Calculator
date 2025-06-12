@@ -2,7 +2,7 @@
 using Calculator.Core.Exceptions.OperationExceptions;
 using Calculator.Core.Interfaces;
 
-namespace Calculator.Core;
+namespace Calculator.Core.Operations;
 
 public class Operation : IOperation
 {

@@ -22,7 +22,7 @@ namespace Calculator.Avalonia.ViewModels
 
             ExecuteOperation = ReactiveCommand.Create(() =>
             {
-                var result = _calculator.EvaluateExpression(ExpressionBuilder.ToString());
+                var result = _calculator.EvaluateExpression(ExpressionBuilder.ToString().Replace("π","pi"));
                 if (result.IsSuccess)
                 {
                     ShownValue = result.Value.ToString(CultureInfo.InvariantCulture);
@@ -81,6 +81,7 @@ namespace Calculator.Avalonia.ViewModels
             get => _isDegSelected;
             set => this.RaiseAndSetIfChanged(ref _isDegSelected, value);
         }
+
 
 
         public ReactiveCommand<Unit, Unit> ClearCommand { get; }

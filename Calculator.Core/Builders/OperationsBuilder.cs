@@ -1,8 +1,8 @@
-﻿using Calculator.Core.Exceptions;
-using Calculator.Core.Exceptions.OperationExceptions;
+﻿using Calculator.Core.Exceptions.OperationExceptions;
 using Calculator.Core.Interfaces;
+using Calculator.Core.Operations;
 
-namespace Calculator.Core.Operations;
+namespace Calculator.Core.Builders;
 
 //пататерн строитель позволяет гибко добавлять только нужные операции. Например инжнерный либо упрощённый калькулятор
 public class OperationsBuilder
@@ -23,9 +23,9 @@ public class OperationsBuilder
 
     public OperationsBuilder AddArithmeticOperations()
     {
-        return this
-            .AddOperation("+", args => args.Sum(),2)
-            .AddOperation("-", args => args[0] + args.Skip(1).Sum(arg => arg * (-1)) , 2)
+        return 
+            AddOperation("+", args => args.Sum(),2)
+            .AddOperation("-", args => args[0] + args.Skip(1).Sum(arg => arg * -1) , 2)
             .AddOperation("*", args => args.Aggregate(1.0,(acc,arg)=>acc*arg), 2)
             .AddOperation("/", (a,b) =>
             {
@@ -37,8 +37,8 @@ public class OperationsBuilder
 
     public OperationsBuilder AddMathFunctions()
     {
-        return this
-            .AddOperation("fact", MathOperations.Factorial)
+        return 
+            AddOperation("fact", MathOperations.Factorial)
             .AddOperation("log", MathOperations.Logarithm)
             .AddOperation("root", MathOperations.Root)
             .AddOperation("sqrt", arg =>
@@ -51,8 +51,8 @@ public class OperationsBuilder
 
     public OperationsBuilder AddTrigonometricFunctions()
     {
-        return this
-            .AddOperation("sin", Math.Sin)
+        return 
+            AddOperation("sin", Math.Sin)
             .AddOperation("cos", Math.Cos)
             .AddOperation("tan", MathOperations.Tan)
             .AddOperation("atan2", Math.Atan2);
@@ -60,8 +60,8 @@ public class OperationsBuilder
 
     public OperationsBuilder AddSpecialFunctions()
     {
-        return this
-           .AddOperation("^", Math.Pow)
+        return 
+           AddOperation("^", Math.Pow)
            .AddOperation("abs", Math.Abs);
     }
 
