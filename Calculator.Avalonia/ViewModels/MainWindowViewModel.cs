@@ -1,5 +1,4 @@
-﻿using Calculator.Core.Exceptions.ExpressionExceptions;
-using Calculator.Core.Interfaces;
+﻿using Calculator.Core.Interfaces;
 using ReactiveUI;
 using System.Globalization;
 using System.Reactive;
@@ -17,7 +16,7 @@ namespace Calculator.Avalonia.ViewModels
            
             ExecuteOperation = ReactiveCommand.Create(() =>
             {
-                var result = _calculator.EvaluateExpression(ExpressionBuilder.ToString().Replace("π","pi"));
+                var result = _calculator.EvaluateExpression(ExpressionBuilder.ToString());
                 if (result.IsSuccess)
                 {
                     ShownValue = result.Value.ToString(CultureInfo.InvariantCulture);
@@ -45,8 +44,9 @@ namespace Calculator.Avalonia.ViewModels
             {
                 if (ExpressionBuilder.Length > 0)
                 {
-                    ExpressionBuilder.Length--;
-                    this.RaisePropertyChanged(nameof(Expression));
+                      string updatedExpression = _calculator.GetStringAfterErasingLastToken(Expression);
+        ExpressionBuilder.Clear().Append(updatedExpression);
+        this.RaisePropertyChanged(nameof(Expression));
                 }
             });
 
@@ -58,7 +58,7 @@ namespace Calculator.Avalonia.ViewModels
            
         }
 
-        private StringBuilder ExpressionBuilder { get; } = new StringBuilder();
+        private StringBuilder ExpressionBuilder { get; set; } = new StringBuilder();
 
         public string Expression => ExpressionBuilder.ToString();
 

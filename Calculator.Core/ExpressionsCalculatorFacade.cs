@@ -37,4 +37,41 @@ public class ExpressionsCalculatorFacade : IExpressionCalculator
             return Result<double>.Failure(ex);
         }
     }
+
+
+    public string GetStringAfterErasingLastToken(string expression)
+    {
+        var tokens = new List<Token>();
+        try
+        {
+             tokens = _tokenizer.Tokenize(expression);
+        }
+        catch
+        {
+            return expression[..^1];
+        }
+
+        if (tokens.Count >= 1)
+        {
+            var lastTokenType = tokens[tokens.Count - 1].Type;
+            if (lastTokenType == TokenType.Constant)
+            {
+                tokens.RemoveAt(tokens.Count - 1);
+                var tokensNames = tokens.Select(t => t.Value);
+                return String.Join("", tokensNames);
+            }
+            if (tokens.Count > 1)
+            {
+                var prevLastTokenType = tokens[tokens.Count - 2].Type;
+                if (lastTokenType == TokenType.LeftParenthesis && prevLastTokenType == TokenType.Function)
+                {
+                    tokens.RemoveAt(tokens.Count - 1);
+                    tokens.RemoveAt(tokens.Count - 1);
+                    var tokensNames = tokens.Select(t => t.Value);
+                    return String.Join("", tokensNames);
+                }
+            }
+        }
+        return expression[..^1];
+    }
 }

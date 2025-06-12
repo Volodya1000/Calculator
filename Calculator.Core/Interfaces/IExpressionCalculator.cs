@@ -5,4 +5,5 @@ namespace Calculator.Core.Interfaces;
 public interface IExpressionCalculator
 {
     Result<double> EvaluateExpression(string expression);
+    public string GetStringAfterErasingLastToken(string expression);
 }

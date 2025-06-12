@@ -83,7 +83,7 @@
 
       <!-- ROW 2 -->
       <Button Content="1/x" Command="{Binding EnterSymbolCommand}" CommandParameter="1/"/>
-      <Button Content="π" Command="{Binding EnterSymbolCommand}" CommandParameter="π"/>
+      <Button Content="π" Command="{Binding EnterSymbolCommand}" CommandParameter="pi"/>
       <Button Content="atan2" Command="{Binding EnterSymbolCommand}" CommandParameter="atan2"/>
       <Button Content="%" Command="{Binding EnterSymbolCommand}" CommandParameter="%"/>
       <Button Content="÷" Command="{Binding EnterSymbolCommand}" CommandParameter="/" />

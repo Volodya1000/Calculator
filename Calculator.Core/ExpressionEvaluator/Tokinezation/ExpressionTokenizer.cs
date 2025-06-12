@@ -44,7 +44,7 @@ public class ExpressionTokenizer
         _regex = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
     }
 
-    public IEnumerable<Token> Tokenize(string expression)
+    public List<Token> Tokenize(string expression)
     {
         var matches = _regex.Matches(expression);
         var tokens = new List<Token>();
