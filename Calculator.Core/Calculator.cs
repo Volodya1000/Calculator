@@ -11,17 +11,19 @@ public class Calculator
 {
     public Calculator()
     {
-        this["+"] = (double a, double b) => a+b;
-        this["-"] = (double a, double b) => a-b;
-        this["*"] = (double a, double b) => a*b;
-        this["/"] = (double a, double b) =>
+        AddBinaryOperator("-", (double a, double b) => a - b, 1);
+        AddBinaryOperator("+", (double a, double b) => a + b,1);
+        AddBinaryOperator("*", (double a, double b) => a * b, 2);
+        AddBinaryOperator("/", (double a, double b) =>
         {
             if (b == 0)
                 throw new InvalidCalculatorArgumentException("Division by zero", 0, 1);
             return a / b;
-        };
-        this["!"] = MathOperations.Factorial;
-        this["%"] = (double arg) => arg / 100;
+        }, 2);
+        AddUnaryOperator("~", (double x) => -x, 3);
+        AddBinaryOperator("^", (double a, double b) => Math.Pow(a, b), 5);
+        AddUnaryOperator("!", MathOperations.Factorial, 5);
+        AddUnaryOperator("%", (double arg) => arg / 100, 5);
     }
 
     public Dictionary<string, IOperation> Operations { get; private set; }
@@ -44,7 +46,11 @@ public class Calculator
 
     public bool OperationExists(string name) => Operations.ContainsKey(name);
 
-    public IEnumerable<string> GetAvailableOperationsNames() => Operations.Keys.OrderBy(k => k);
+    public IEnumerable<string> GetAllOperationsNames() => Operations.Keys.OrderBy(k => k);
+
+    public IEnumerable<string> GetOperatorNames() =>
+                                Operations.Where(pair => pair.Value is Operator)
+                                          .Select(pair => pair.Key);
 
     public Delegate this[string name]
     {
@@ -88,6 +94,16 @@ public class Calculator
                 }
             }
         return this;
+    }
+
+    private void AddBinaryOperator(string key,Func<double, double, double> func, int precedence)
+    {
+        Operations.Add(key, new Operator(key, args => func(args[0], args[1]),2, precedence));
+    }
+
+    private void AddUnaryOperator(string key, Func<double, double> func, int precedence)
+    {
+        Operations.Add(key, new Operator(key, args => func(args[0]), 1, precedence));
     }
 
     private IOperation CreateOperationFromDelegate(string name, Delegate del)

@@ -1,4 +1,5 @@
 ﻿using Calculator.Core.Exceptions.ExpressionExceptions;
+using Calculator.Core.Operations;
 using System.Text.RegularExpressions;
 
 namespace Calculator.Core.ExpressionEvaluator.Tokinezation;
@@ -8,23 +9,28 @@ public class ExpressionTokenizer
     private readonly Regex _regex;
 
 
-    public ExpressionTokenizer(List<string> functions, List<string> constants)
+    public ExpressionTokenizer(List<string> functions, List<string> operators, List<string> constants)
     {
         var patternParts = new List<string>
         {
             @"(?<LeftParenthesis>\()",
             @"(?<RightParenthesis>\))",
             @"(?<Delimiter>,)",
-            @"(?<Operator>[-+*/^!%])",
             @"(?<Number>\d+(\.\d+)?)" 
         };
 
         //Regex.Escape экранирует заданные строки , чтобы их можно было безопасно использовать в регулярном выражении
 
+        if(operators != null && operators.Count>0)
+        {
+            string operatorsPattern = string.Join("", operators.Select(f => f.ToLower()).Select(Regex.Escape));
+            patternParts.Add($@"(?<Operator>[{operatorsPattern}])");
+        }
+
         // Добавляем функции, если они есть
         if (functions != null && functions.Count > 0)
         {
-            string functionPattern = string.Join("|", functions.Select(f=>f.ToLower()).Select(Regex.Escape));
+            string functionPattern = string.Join("|", functions.Where(f=>!(f is Operator)).Select(f=>f.ToLower()).Select(Regex.Escape));
             patternParts.Add($@"(?<Function>{functionPattern})");
         }
 

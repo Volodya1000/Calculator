@@ -22,7 +22,6 @@ public class ExpressionEvaluatorTests
 
         var calculator = new Calculator.Core.Calculator().AddAssembly("Calculator.Core.dll");
 
-        var operationsDict = new OperationsBuilder().AddAll().Build();
         var facade= new ExpressionsEvaluatorFacade(calculator, constantsDictionary);
         var result = facade.EvaluateExpression(expression);
         Assert.True(result.IsSuccess);

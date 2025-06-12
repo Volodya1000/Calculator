@@ -5,10 +5,7 @@ using Calculator.Core;
 using Calculator.Core.Builders;
 using Calculator.Core.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualBasic;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Calculator.Avalonia;
 

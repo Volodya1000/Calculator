@@ -18,7 +18,7 @@ public class ExpressionsEvaluatorFacade : IExpressionCalculator
         _operations = new Dictionary<string, IOperation>(
             calculator.Operations,
             StringComparer.OrdinalIgnoreCase);
-        _tokenizer = new ExpressionTokenizer(calculator.Operations.Keys.ToList(), constants.Keys.ToList());
+        _tokenizer = new ExpressionTokenizer(calculator.GetAllOperationsNames().ToList(), calculator.GetOperatorNames().ToList() ,constants.Keys.ToList());
         _parser = new PrattParser(calculator.Operations);
         _evaluator = new ExpressionEvaluator.ExpressionEvaluator(calculator, constants);
     }

@@ -1,13 +1,14 @@
 ﻿using Calculator.Core.Exceptions.ExpressionExceptions;
 using Calculator.Core.ExpressionEvaluator.Tokinezation;
 using Calculator.Core.Interfaces;
+using Calculator.Core.Operations;
 
 namespace Calculator.Core.ExpressionEvaluator;
 
 public class PrattParser
 {
     private readonly Dictionary<string, IOperation> _operations;
-    private readonly Dictionary<string, int> _operators;
+    //private readonly Dictionary<string, int> _operators;
 
     private List<Token> _tokens;
     private int _index;
@@ -18,12 +19,12 @@ public class PrattParser
     public PrattParser(Dictionary<string, IOperation> operations)
     {
         _operations = operations;
-        _operators = new Dictionary<string, int>
-        {
-            { "+", 1 }, { "-", 1 }, { "*", 2 },
-            { "/", 2 }, { "~", 3 }, { "^", 4 },
-            { "!", 5 }, { "%", 5 }
-        };
+        //_operators = new Dictionary<string, int>
+        //{
+        //    { "+", 1 }, { "-", 1 }, { "*", 2 },
+        //    { "/", 2 }, { "~", 3 }, { "^", 4 },
+        //    { "!", 5 }, { "%", 5 }
+        //};
     }
 
     //null используется в качестве маркера конца ввода 
@@ -63,7 +64,11 @@ public class PrattParser
     private int GetPrecedence(Token token)
     {
         if (token != null && token.Type == TokenType.Operator)
-            return _operators.TryGetValue(token.Value, out int precedence) ? precedence : 0;
+        {
+            if (_operations.TryGetValue(token.Value, out IOperation operation)
+                && operation is Operator @operator)
+            return @operator.Precedence;
+        }
 
         return 0;
     }
@@ -87,7 +92,7 @@ public class PrattParser
     private void ParseInfix()
     {
         var token = Consume(TokenType.Operator);
-        ParseExpression(_operators[token.Value]);
+        ParseExpression(GetPrecedence(token));
         _rpn.Add(token);
     }
 
@@ -143,7 +148,7 @@ public class PrattParser
     {
         var token = Consume(TokenType.Operator);
         var unaryToken = new Token(TokenType.Operator, "~", token.Start, token.End);
-        ParseExpression(_operators["~"]);
+        ParseExpression(4);
         _rpn.Add(unaryToken);
     }
 
