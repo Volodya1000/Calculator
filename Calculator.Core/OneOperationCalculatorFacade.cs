@@ -4,11 +4,11 @@ using Calculator.Core.ResultPattern;
 
 namespace Calculator.Core;
 
-public class Calculator
+public class OneOperationCalculatorFacade
 {
     private readonly Dictionary<string, IOperation> _operations;
 
-    public Calculator(Dictionary<string, IOperation> operations)
+    public OneOperationCalculatorFacade(Dictionary<string, IOperation> operations)
     {
         _operations = new Dictionary<string, IOperation>(
             operations,

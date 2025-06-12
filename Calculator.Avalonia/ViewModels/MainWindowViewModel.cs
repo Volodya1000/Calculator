@@ -14,12 +14,7 @@ namespace Calculator.Avalonia.ViewModels
         public MainWindowViewModel(IExpressionCalculator calculator)
         {
             _calculator = calculator;
-
-            ToggleDegRadCommand = ReactiveCommand.Create(() =>
-            {
-                IsDegSelected = !IsDegSelected;
-            });
-
+           
             ExecuteOperation = ReactiveCommand.Create(() =>
             {
                 var result = _calculator.EvaluateExpression(ExpressionBuilder.ToString().Replace("π","pi"));
@@ -68,21 +63,12 @@ namespace Calculator.Avalonia.ViewModels
         public string Expression => ExpressionBuilder.ToString();
 
         private string _shownValue = "0";
-        private bool _isDegSelected = true;
 
         public string ShownValue
         {
             get => _shownValue;
             set => this.RaiseAndSetIfChanged(ref _shownValue, value);
         }
-
-        public bool IsDegSelected
-        {
-            get => _isDegSelected;
-            set => this.RaiseAndSetIfChanged(ref _isDegSelected, value);
-        }
-
-
 
         public ReactiveCommand<Unit, Unit> ClearCommand { get; }
         public ReactiveCommand<Unit, Unit> RemoveLastNumberCommand { get; }

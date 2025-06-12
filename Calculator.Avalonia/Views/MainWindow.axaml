@@ -69,20 +69,20 @@
     <UniformGrid Grid.Row="1" Columns="5" Margin="10">
       <!-- ROW 0 -->
       <Button Content="AC" Command="{Binding ClearCommand}"/>
-      <Button Content="RAD" Command="{Binding ToggleDegRadCommand}"/>
+      <Button Content="log2" Command="{Binding EnterFunctionCommand}"  CommandParameter="log2"/>
       <Button Content="(" Command="{Binding EnterSymbolCommand}" CommandParameter="("/>
       <Button Content=")" Command="{Binding EnterSymbolCommand}" CommandParameter=")"/>
       <Button Content="⌫" Command="{Binding RemoveLastNumberCommand}"/>
 
       <!-- ROW 1 -->
       <Button Content="e" Command="{Binding EnterSymbolCommand}" CommandParameter="e"/>
-      <Button Content="log" Command="{Binding EnterFunctionCommand}" CommandParameter="log"/>
+      <Button Content="log10" Command="{Binding EnterFunctionCommand}" CommandParameter="log10"/>
       <Button Content="sin" Command="{Binding EnterFunctionCommand}" CommandParameter="sin"/>
       <Button Content="cos" Command="{Binding EnterFunctionCommand}" CommandParameter="cos"/>
       <Button Content="tan" Command="{Binding EnterFunctionCommand}" CommandParameter="tan"/>
 
       <!-- ROW 2 -->
-      <Button Content="1/x" Command="{Binding EnterSymbolCommand}" CommandParameter="1/x"/>
+      <Button Content="1/x" Command="{Binding EnterSymbolCommand}" CommandParameter="1/"/>
       <Button Content="π" Command="{Binding EnterSymbolCommand}" CommandParameter="π"/>
       <Button Content="atan2" Command="{Binding EnterSymbolCommand}" CommandParameter="atan2"/>
       <Button Content="%" Command="{Binding EnterSymbolCommand}" CommandParameter="%"/>
@@ -96,7 +96,7 @@
       <Button Content="×" Command="{Binding EnterSymbolCommand}" CommandParameter="*" />
 
       <!-- ROW 4 -->
-      <Button Content="x!" Command="{Binding EnterFunctionCommand}" CommandParameter="fact"/>
+      <Button Content="x!" Command="{Binding EnterSymbolCommand}" CommandParameter="!"/>
       <Button Classes="digit" Content="4" Command="{Binding EnterSymbolCommand}" CommandParameter="4"/>
       <Button Classes="digit" Content="5" Command="{Binding EnterSymbolCommand}" CommandParameter="5"/>
       <Button Classes="digit" Content="6" Command="{Binding EnterSymbolCommand}" CommandParameter="6"/>

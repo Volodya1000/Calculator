@@ -1,7 +1,5 @@
 ﻿using Calculator.Core;
-using Calculator.Core.ExpressionEvaluator;
-using Calculator.Core.ExpressionEvaluator.Tokinezation;
-using Calculator.Core.Operations;
+using Calculator.Core.Builders;
 
 namespace Core.Tests.ExpressionEvaluator;
 
@@ -26,30 +24,4 @@ public class ExpressionEvaluatorTests
         Assert.True(result.IsSuccess);
         Assert.Equal(expected, result.Value, Eps);
     }
-
-    //[Fact]
-    //public void ExpressionWithVariables_EvaluatesCorrectly()
-    //{
-    //    // Arrange
-    //    string expression = "sin(x) * (pi/-x - 5)^2";
-    //    var parser = new ExpressionParser(expression);
-    //    parser.SetVariable("x", -Math.PI / 2);
-    //    parser.SetVariable("pi", Math.PI);
-
-    //    // Act
-    //    double result = parser.Evaluate();
-
-    //    // Assert
-    //    Assert.Equal(-9, result, Eps);
-    //}
-
-    //[Theory]
-    //[InlineData("invalid", null)]
-    //[InlineData("1 + +", null)]
-    //[InlineData("max(1,2", null)]
-    //public void InvalidExpressions_ThrowException(string expression, object _)
-    //{
-    //    var parser = new ExpressionParser(expression);
-    //    Assert.Throws<Exception>(() => parser.Evaluate());
-    //}
 }

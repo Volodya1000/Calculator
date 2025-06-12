@@ -10,9 +10,9 @@ public class ConsoleProcessor
     private readonly ConsoleColor _resultColor = ConsoleColor.Green;
     private readonly ConsoleColor _messageColor = ConsoleColor.White;
 
-    private readonly Core.Calculator _calculatorFacade;
+    private readonly Core.OneOperationCalculatorFacade _calculatorFacade;
 
-    public ConsoleProcessor(Core.Calculator calculatorFacade)
+    public ConsoleProcessor(Core.OneOperationCalculatorFacade calculatorFacade)
     {
         _calculatorFacade = calculatorFacade ?? throw new ArgumentNullException(nameof(calculatorFacade)); ;
     }

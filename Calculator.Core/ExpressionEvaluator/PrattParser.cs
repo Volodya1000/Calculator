@@ -1,7 +1,6 @@
 ﻿using Calculator.Core.Exceptions.ExpressionExceptions;
 using Calculator.Core.ExpressionEvaluator.Tokinezation;
 using Calculator.Core.Interfaces;
-using System.Reflection.Metadata;
 
 namespace Calculator.Core.ExpressionEvaluator;
 
@@ -22,7 +21,8 @@ public class PrattParser
         _operators = new Dictionary<string, int>
         {
             { "+", 1 }, { "-", 1 }, { "*", 2 },
-            { "/", 2 }, { "~", 3 }, { "^", 4 }
+            { "/", 2 }, { "~", 3 }, { "^", 4 },
+            { "!", 5 }, { "%", 5 }
         };
     }
 
@@ -70,11 +70,11 @@ public class PrattParser
 
     /*
     * Expression
-    *   = Prefix (Infix)*
+    *   = Postfix (Infix)*
     */
     private void ParseExpression(int precedence = 0)
     {
-        ParsePrefix();
+        ParsePostfix();
 
         while (_currentToken != null && precedence < GetPrecedence(_currentToken))
             ParseInfix();
@@ -87,8 +87,7 @@ public class PrattParser
     private void ParseInfix()
     {
         var token = Consume(TokenType.Operator);
-        int newPrecedence = _operators[token.Value] - (token.Value == "^" ? 1 : 0);
-        ParseExpression(newPrecedence);
+        ParseExpression(_operators[token.Value]);
         _rpn.Add(token);
     }
 
@@ -167,5 +166,20 @@ public class PrattParser
 
         Consume(TokenType.RightParenthesis);
         _rpn.Add(token);
+    }
+
+    /*
+     * Postfix
+     *  = Prefix ("!" / "%")*
+     */
+    private void ParsePostfix()
+    {
+        ParsePrefix();
+        while (_currentToken != null && _currentToken.Type == TokenType.Operator &&
+               (_currentToken.Value == "!" || _currentToken.Value == "%"))
+        {
+            var token = Consume(TokenType.Operator);
+            _rpn.Add(token);
+        }
     }
 }

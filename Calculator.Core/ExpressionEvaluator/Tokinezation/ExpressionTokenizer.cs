@@ -15,7 +15,7 @@ public class ExpressionTokenizer
             @"(?<LeftParenthesis>\()",
             @"(?<RightParenthesis>\))",
             @"(?<Delimiter>,)",
-            @"(?<Operator>[-+*/^])",
+            @"(?<Operator>[-+*/^!%])",
             @"(?<Number>\d+(\.\d+)?)" 
         };
 
@@ -62,7 +62,7 @@ public class ExpressionTokenizer
         return tokens;
     }
 
-    private Token MatchToToken(Match match)
+    private Token ? MatchToToken(Match match)
     {
         foreach (TokenType type in Enum.GetValues(typeof(TokenType)))
         {

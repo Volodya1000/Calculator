@@ -47,6 +47,8 @@ public class Operation : IOperation
         {
             double result = _function(args);
 
+            result = Math.Round(result, 12);
+
             if (double.IsNaN(result))
                 throw new ExecutingOperationException(_name, "Result is not a number (NaN)");
 

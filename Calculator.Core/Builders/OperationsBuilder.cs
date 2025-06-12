@@ -7,6 +7,21 @@ namespace Calculator.Core.Builders;
 //пататерн строитель позволяет гибко добавлять только нужные операции. Например инжнерный либо упрощённый калькулятор
 public class OperationsBuilder
 {
+    public OperationsBuilder()
+    {
+        AddOperation("+", args => args.Sum(), 2)
+          .AddOperation("-", args => args[0] + args.Skip(1).Sum(arg => arg * -1), 2)
+          .AddOperation("*", args => args.Aggregate(1.0, (acc, arg) => acc * arg), 2)
+          .AddOperation("/", (a, b) =>
+          {
+              if (b == 0)
+                  throw new InvalidCalculatorArgumentException("Division by zero", 0, 1);
+              return a / b;
+          })
+          .AddOperation("!", MathOperations.Factorial)
+          .AddOperation("%", arg => arg / 100);
+    } 
+
     private readonly Dictionary<string, IOperation> _operations = new (StringComparer.OrdinalIgnoreCase);
 
     public OperationsBuilder AddOperation(string key,Func<double[],double> func, int argCount)
@@ -21,25 +36,10 @@ public class OperationsBuilder
     public OperationsBuilder AddOperation(string key, Func<double, double, double> func)
         => AddOperation(key, args => func(args[0], args[1]), 2);
 
-    public OperationsBuilder AddArithmeticOperations()
-    {
-        return 
-            AddOperation("+", args => args.Sum(),2)
-            .AddOperation("-", args => args[0] + args.Skip(1).Sum(arg => arg * -1) , 2)
-            .AddOperation("*", args => args.Aggregate(1.0,(acc,arg)=>acc*arg), 2)
-            .AddOperation("/", (a,b) =>
-            {
-                if (b == 0)
-                    throw new InvalidCalculatorArgumentException("Division by zero",0,1);
-                return a / b;
-            });
-    }
-
     public OperationsBuilder AddMathFunctions()
     {
-        return 
-            AddOperation("fact", MathOperations.Factorial)
-            .AddOperation("log", MathOperations.Logarithm)
+        return AddOperation("log10", Math.Log10)
+            .AddOperation("log2", Math.Log2)
             .AddOperation("root", MathOperations.Root)
             .AddOperation("sqrt", arg =>
             {
@@ -67,8 +67,7 @@ public class OperationsBuilder
 
     public OperationsBuilder AddAll()
     {
-        return AddArithmeticOperations()
-            .AddMathFunctions()
+        return AddMathFunctions()
             .AddTrigonometricFunctions()
             .AddSpecialFunctions();
     }
