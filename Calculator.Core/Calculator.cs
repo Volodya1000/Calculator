@@ -1,4 +1,5 @@
-﻿using Calculator.Core.Exceptions.OperationExceptions;
+﻿using Calculator.Core.Attributes;
+using Calculator.Core.Exceptions.OperationExceptions;
 using Calculator.Core.Interfaces;
 using Calculator.Core.Operations;
 using Calculator.Core.ResultPattern;
@@ -41,6 +42,10 @@ public class Calculator
         foreach (var type in asm.GetExportedTypes())
             foreach (var m in type.GetMethods(BindingFlags.Public | BindingFlags.Static))
             {
+                var attr = m.GetCustomAttribute<OperationAttribute>();
+                if (attr == null)
+                    continue;
+
                 if (m.ReturnType != typeof(double))
                     continue;
 
