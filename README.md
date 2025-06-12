@@ -1,3 +1,3 @@
 # Интерфейс калькулятора:
 
-![](Screenshots/CalculatorUi.png)
+![UI](Screenshots/CalculatorUi.png)
