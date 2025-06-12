@@ -1,6 +1,6 @@
 ﻿namespace Calculator.Core.Exceptions.OperationExceptions;
 
-public class OperationNotFoundException : OperationException
+public sealed class OperationNotFoundException : OperationException
 {
     public OperationNotFoundException(string operation) : base(operation,$"Operation '{operation}' not found")
     {

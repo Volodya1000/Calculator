@@ -1,4 +1,5 @@
-﻿using Calculator.Core.ExpressionEvaluator.Tokinezation;
+﻿using Calculator.Core.Exceptions.ExpressionExceptions;
+using Calculator.Core.ExpressionEvaluator.Tokinezation;
 using Calculator.Core.Interfaces;
 using System.Reflection.Metadata;
 
@@ -36,7 +37,7 @@ public class PrattParser
         ParseExpression();
 
         if (_index < _tokens.Count)
-            throw new Exception($"extra tokens after end of expression ({_currentToken.Start})");
+            throw new ExtraTokensException(_currentToken.Start);
 
          return _rpn;
     }
@@ -49,10 +50,10 @@ public class PrattParser
         var token = _currentToken;
 
         if (token == null)
-            throw new Exception($"unexpected end of input, expected {expectedType}");
+            throw new UnexpectedEndException(expectedType);
 
         if (token.Type != expectedType)
-            throw new Exception($"unexpected token: \"{token.Value}\", expected {expectedType} ({token.Start}:{token.End})");
+            throw new UnexpectedTokenException(token.Value,$", expected {expectedType}",token.Start,token.End);
 
         _index++;
         _currentToken = _index < _tokens.Count ? _tokens[_index] : null;
@@ -97,13 +98,12 @@ public class PrattParser
     *   | UnaryExpression
     *   | FunctionExpression
     *   | CONSTANT
-    *   | VARIABLE
     *   | NUMBER
     */
     private void ParsePrefix()
     {
         if (_currentToken == null)
-            throw new Exception("Unexpected end of input");
+            throw new UnexpectedEndException(TokenType.Number);
 
         switch (_currentToken.Type)
         {

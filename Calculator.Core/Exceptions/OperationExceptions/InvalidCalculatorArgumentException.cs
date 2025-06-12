@@ -1,12 +1,12 @@
 ﻿namespace Calculator.Core.Exceptions.OperationExceptions;
 
-public class InvalidCalculatorArgumentException:OperationException
+public sealed class InvalidCalculatorArgumentException:OperationException
 {
     public double Arg { get; }
 
     public int ArgIndex { get; }
 
-    public InvalidCalculatorArgumentException(string operation, string problem, double arg, int argIndex) : base(operation, $"{operation}: {problem} (argument {arg} on position: {argIndex})")
+    public InvalidCalculatorArgumentException(string operation, string problem, double arg, int argIndex) : base(operation,problem)
     {
         Operation = operation;
         Arg = arg;

@@ -1,12 +1,12 @@
 ﻿namespace Calculator.Core.Exceptions.ExpressionExceptions;
 
-public class ExpressionException : Exception
+public  abstract class ExpressionException : Exception
 {
     public int Start { get; }
     public int End { get; }
 
     protected ExpressionException(string message, int start, int end)
-        : base($"{message} ({start}:{end})")
+        : base($"{message}")
     {
         Start = start;
         End = end;

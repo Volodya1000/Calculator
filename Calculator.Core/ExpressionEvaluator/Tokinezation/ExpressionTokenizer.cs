@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using Calculator.Core.Exceptions.ExpressionExceptions;
+using System.Text.RegularExpressions;
 
 namespace Calculator.Core.ExpressionEvaluator.Tokinezation;
 
@@ -54,8 +55,8 @@ public class ExpressionTokenizer
         var unknownTokens = tokens.Where(t => t.Type == TokenType.Unknown).ToList();
         if (unknownTokens.Count > 0)
         {
-            string invalidTokens = string.Join(", ", unknownTokens.Select(t => t.Value));
-            throw new ArgumentException($"Invalid tokens found: {invalidTokens}");
+            var token = unknownTokens.First();
+            throw new UnknownTokenException(token.Value, token.Start, token.End);
         }
 
         return tokens;

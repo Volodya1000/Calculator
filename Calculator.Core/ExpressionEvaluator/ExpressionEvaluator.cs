@@ -1,5 +1,8 @@
-﻿using Calculator.Core.ExpressionEvaluator.Tokinezation;
+﻿using Calculator.Core.Exceptions.ExpressionExceptions;
+using Calculator.Core.Exceptions.OperationExceptions;
+using Calculator.Core.ExpressionEvaluator.Tokinezation;
 using Calculator.Core.Interfaces;
+using System.Globalization;
 
 namespace Calculator.Core.ExpressionEvaluator;
 
@@ -24,7 +27,7 @@ public class ExpressionEvaluator
             switch (token.Type)
             {
                 case TokenType.Number:
-                    rpnStack.Push(double.Parse(token.Value));
+                    rpnStack.Push(double.Parse(token.Value, CultureInfo.InvariantCulture));
                     break;
                 case TokenType.Constant:
                     EvaluateConstant(token,rpnStack);
@@ -34,26 +37,32 @@ public class ExpressionEvaluator
                     EvaluateOperation(token, rpnStack);
                     break;
                 default:
-                    throw new Exception($"got invalid token \"{token.Value}\" ({token.Start}:{token.End})");
+                    throw new UnexpectedTokenException(token.Value,"",token.Start,token.End);
             }
         }
 
+        //В стеке должен остаться только один ответ
         if (rpnStack.Count != 1)
-            throw new Exception("expression is invalid");
+            throw new InvalidExpressionException();
 
         return rpnStack.Pop();
     }
 
     private void EvaluateConstant(Token token, Stack<double> rpnStack)
     {
-        if (_constants.TryGetValue(token.Value, out double constant))
-            rpnStack.Push(constant);
+        if (!_constants.TryGetValue(token.Value, out double constant))
+            throw new UnknownTokenException(token.Value, token.Start, token.End);
+
+        rpnStack.Push(constant);
     }
 
     private void EvaluateOperation(Token token, Stack<double> rpnStack)
     {
         if (!_operations.TryGetValue(token.Value, out var operation))
-            throw new Exception($"got unknown function \"{token.Value}\" ({token.Start}:{token.End})");
+            throw new UnknownTokenException(token.Value,token.Start,token.End);
+
+        if (rpnStack.Count < operation.ArgsCount)
+            throw new InsufficientArgumentsException(token.Value, operation.ArgsCount, rpnStack.Count);
 
         var args = new double[operation.ArgsCount];
         for (int i = operation.ArgsCount - 1; i >= 0; i--)

@@ -1,86 +1,94 @@
-﻿using Calculator.Core.Interfaces;
+﻿using Calculator.Core.Exceptions.ExpressionExceptions;
+using Calculator.Core.Interfaces;
 using ReactiveUI;
-using System.Text;
+using System.Globalization;
 using System.Reactive;
+using System.Text;
 
-namespace Calculator.Avalonia.ViewModels;
-
-public class MainWindowViewModel : ReactiveObject
+namespace Calculator.Avalonia.ViewModels
 {
-    private readonly IExpressionCalculator _calculator;
-
-    public MainWindowViewModel(IExpressionCalculator calculator)
+    public class MainWindowViewModel : ReactiveObject
     {
-        _calculator = calculator;
+        private readonly IExpressionCalculator _calculator;
 
-        ClearCommand = ReactiveCommand.Create(() =>
+        public MainWindowViewModel(IExpressionCalculator calculator)
         {
-            ExpressionBuilder.Clear();
-            ShownValue = "0";
-            this.RaisePropertyChanged(nameof(Expression));
-        });
+            _calculator = calculator;
 
-        RemoveLastNumberCommand = ReactiveCommand.Create(() =>
-        {
-            if (ExpressionBuilder.Length > 0)
+            ToggleDegRadCommand = ReactiveCommand.Create(() =>
             {
-                ExpressionBuilder.Length--;
+                IsDegSelected = !IsDegSelected;
+            });
+
+            ExecuteOperation = ReactiveCommand.Create(() =>
+            {
+                var result = _calculator.EvaluateExpression(ExpressionBuilder.ToString());
+                if (result.IsSuccess)
+                {
+                    ShownValue = result.Value.ToString(CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    ShownValue = result.Error.Message;
+                }
+            });
+
+            EnterSymbolCommand = ReactiveCommand.Create<string>(symbol =>
+            {
+                ExpressionBuilder.Append(symbol);
                 this.RaisePropertyChanged(nameof(Expression));
-            }
-        });
+            });
 
-        ToggleDegRadCommand = ReactiveCommand.Create(() =>
-        {
-            IsDegSelected = !IsDegSelected;
-        });
+            ClearCommand = ReactiveCommand.Create(() =>
+            {
+                ExpressionBuilder.Clear();
+                ShownValue = "0";
+                this.RaisePropertyChanged(nameof(Expression));
+            });
 
-        ExecuteOperation = ReactiveCommand.Create(() =>
-        {
-            var result = _calculator.EvaluateExpression(ExpressionBuilder.ToString());
-            if (result.IsSuccess)
-                ShownValue = result.Value.ToString();
-            else
-                ShownValue = result.Error.Message;
-        });
+            RemoveLastNumberCommand = ReactiveCommand.Create(() =>
+            {
+                if (ExpressionBuilder.Length > 0)
+                {
+                    ExpressionBuilder.Length--;
+                    this.RaisePropertyChanged(nameof(Expression));
+                }
+            });
 
-        EnterSymbolCommand = ReactiveCommand.Create<string>(symbol =>
-        {
-            ExpressionBuilder.Append(symbol);
-            this.RaisePropertyChanged(nameof(Expression));
-        });
+            EnterFunctionCommand = ReactiveCommand.Create<string>(function =>
+            {
+                ExpressionBuilder.Append(function).Append('(');
+                this.RaisePropertyChanged(nameof(Expression));
+            });
+           
+        }
 
-        EnterFunctionCommand = ReactiveCommand.Create<string>(function =>
+        private StringBuilder ExpressionBuilder { get; } = new StringBuilder();
+
+        public string Expression => ExpressionBuilder.ToString();
+
+        private string _shownValue = "0";
+        private bool _isDegSelected = true;
+
+        public string ShownValue
         {
-            ExpressionBuilder.Append(function).Append('(');
-            this.RaisePropertyChanged(nameof(Expression));
-        });
+            get => _shownValue;
+            set => this.RaiseAndSetIfChanged(ref _shownValue, value);
+        }
+
+        public bool IsDegSelected
+        {
+            get => _isDegSelected;
+            set => this.RaiseAndSetIfChanged(ref _isDegSelected, value);
+        }
+
+
+        public ReactiveCommand<Unit, Unit> ClearCommand { get; }
+        public ReactiveCommand<Unit, Unit> RemoveLastNumberCommand { get; }
+        public ReactiveCommand<Unit, Unit> ToggleDegRadCommand { get; }
+        public ReactiveCommand<Unit, Unit> ExecuteOperation { get; }
+
+        public ReactiveCommand<string, Unit> EnterSymbolCommand { get; }
+        public ReactiveCommand<string, Unit> EnterFunctionCommand { get; }
     }
-
-    private StringBuilder ExpressionBuilder { get; } = new StringBuilder();
-
-    // Для привязки к интерфейсу
-    public string Expression => ExpressionBuilder.ToString();
-
-    private string _shownValue = "0";
-    private bool _isDegSelected = true;
-
-    public string ShownValue
-    {
-        get => _shownValue;
-        set => this.RaiseAndSetIfChanged(ref _shownValue, value);
-    }
-
-    public bool IsDegSelected
-    {
-        get => _isDegSelected;
-        set => this.RaiseAndSetIfChanged(ref _isDegSelected, value);
-    }
-
-    public ReactiveCommand<Unit, Unit> ClearCommand { get; }
-    public ReactiveCommand<Unit, Unit> RemoveLastNumberCommand { get; }
-    public ReactiveCommand<Unit, Unit> ToggleDegRadCommand { get; }
-    public ReactiveCommand<Unit, Unit> ExecuteOperation { get; }
-
-    public ReactiveCommand<string, Unit> EnterSymbolCommand { get; }
-    public ReactiveCommand<string, Unit> EnterFunctionCommand { get; }
 }
