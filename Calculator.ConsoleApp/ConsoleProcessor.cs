@@ -10,9 +10,9 @@ public class ConsoleProcessor
     private readonly ConsoleColor _resultColor = ConsoleColor.Green;
     private readonly ConsoleColor _messageColor = ConsoleColor.White;
 
-    private readonly Core.OneOperationCalculatorFacade _calculatorFacade;
+    private readonly Core.Calculator _calculatorFacade;
 
-    public ConsoleProcessor(Core.OneOperationCalculatorFacade calculatorFacade)
+    public ConsoleProcessor(Core.Calculator calculatorFacade)
     {
         _calculatorFacade = calculatorFacade ?? throw new ArgumentNullException(nameof(calculatorFacade)); ;
     }
@@ -111,7 +111,7 @@ public class ConsoleProcessor
         Console.ForegroundColor = _messageColor;
         Console.WriteLine("Available operations:");
 
-        foreach (var operation in _calculatorFacade.GetAvailableOperations())
+        foreach (var operation in _calculatorFacade.GetAvailableOperationsNames())
         {
             Console.WriteLine($"  {operation}");
         }
