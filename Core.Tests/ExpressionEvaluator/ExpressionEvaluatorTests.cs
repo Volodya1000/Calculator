@@ -18,8 +18,12 @@ public class ExpressionEvaluatorTests
     [InlineData("cos(7 - 5)^2 + sin(4-2)^2", 1)]
     public void ValidExpressions_EvaluateCorrectly(string expression, double expected)
     {
+        var constantsDictionary = new ConstantsBuilder().AddMathConstants().Build();
+
+        var calculator = new Calculator.Core.Calculator().AddAssembly("Calculator.Core.dll");
+
         var operationsDict = new OperationsBuilder().AddAll().Build();
-        var facade= new ExpressionsCalculatorFacade(operationsDict, new Dictionary<string, double>());
+        var facade= new ExpressionsEvaluatorFacade(calculator, constantsDictionary);
         var result = facade.EvaluateExpression(expression);
         Assert.True(result.IsSuccess);
         Assert.Equal(expected, result.Value, Eps);

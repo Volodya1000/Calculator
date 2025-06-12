@@ -9,12 +9,27 @@ namespace Calculator.Core;
 
 public class Calculator
 {
-    private readonly Dictionary<string, IOperation> _operations
-        = new(StringComparer.OrdinalIgnoreCase);
+    public Calculator()
+    {
+        this["+"] = (double a, double b) => a+b;
+        this["-"] = (double a, double b) => a-b;
+        this["*"] = (double a, double b) => a*b;
+        this["/"] = (double a, double b) =>
+        {
+            if (b == 0)
+                throw new InvalidCalculatorArgumentException("Division by zero", 0, 1);
+            return a / b;
+        };
+        this["!"] = MathOperations.Factorial;
+        this["%"] = (double arg) => arg / 100;
+    }
+
+    public Dictionary<string, IOperation> Operations { get; private set; }
+        = new(StringComparer.OrdinalIgnoreCase); 
 
     public Result<double> Call(string operationName, params double[] args)
     {
-        if (!_operations.TryGetValue(operationName, out var op))
+        if (!Operations.TryGetValue(operationName, out var op))
             return Result<double>.Failure(new OperationNotFoundException(operationName));
 
         try 
@@ -27,13 +42,13 @@ public class Calculator
         }
     }
 
-    public bool OperationExists(string name) => _operations.ContainsKey(name);
+    public bool OperationExists(string name) => Operations.ContainsKey(name);
 
-    public IEnumerable<string> GetAvailableOperationsNames() => _operations.Keys.OrderBy(k => k);
+    public IEnumerable<string> GetAvailableOperationsNames() => Operations.Keys.OrderBy(k => k);
 
     public Delegate this[string name]
     {
-        set => _operations[name] = CreateOperationFromDelegate(name, value);
+        set => Operations[name] = CreateOperationFromDelegate(name, value);
     }
 
     public Calculator AddAssembly(string assemblyPath)
@@ -43,45 +58,36 @@ public class Calculator
             foreach (var m in type.GetMethods(BindingFlags.Public | BindingFlags.Static))
             {
                 var attr = m.GetCustomAttribute<OperationAttribute>();
-                if (attr == null)
-                    continue;
+                if (attr == null) continue;
 
-                if (m.ReturnType != typeof(double))
-                    continue;
-
-                Delegate del;
-                var prms = m.GetParameters();
-
-                // один параметр double[]
-                if (prms.Length == 1 && prms[0].ParameterType == typeof(double[]))
-                {
-                    del = (Func<double[], double>)(arr =>
-                        (double)m.Invoke(null, new object[] { arr })!);
-                }
-                // несколько отдельных double
-                else if (prms.All(p => p.ParameterType == typeof(double)))
-                {
-                    del = CreateFixedArgDelegate(m);
-                }
-                else
-                    continue;
+                if (m.ReturnType != typeof(double)) continue;
 
                 string opName = attr.Name ?? m.Name;
-                _operations[opName] = CreateOperationFromDelegate(m.Name, del);
+                var prms = m.GetParameters();
+
+                // Обработка операций с переменным числом аргументов
+                if (prms.Length == 1 && prms[0].ParameterType == typeof(double[]))
+                {
+                    var func = (Func<double[], double>)(arr =>
+                        (double)m.Invoke(null, new object[] { arr })!);
+                    Operations[opName] = new Operation(opName, func, -1);
+                }
+                // Обработка операций с фиксированными аргументами
+                else if (prms.All(p => p.ParameterType == typeof(double)))
+                {
+                    int arity = prms.Length;
+                    Operations[opName] = new Operation(
+                        opName,
+                        args =>
+                        {
+                            if (args.Length != arity)
+                                throw new InsufficientArgumentsException(opName, arity, args.Length);
+                            return (double)m.Invoke(null, args.Cast<object>().ToArray())!;
+                        },
+                        arity); 
+                }
             }
-
         return this;
-    }
-
-    private Func<double[], double> CreateFixedArgDelegate(MethodInfo m)
-    {
-        var count = m.GetParameters().Length;
-        return args =>
-        {
-            if (args.Length != count)
-                throw new InsufficientArgumentsException(m.Name, count, args.Length);
-            return (double)m.Invoke(null, args.Cast<object>().ToArray())!;
-        };
     }
 
     private IOperation CreateOperationFromDelegate(string name, Delegate del)
@@ -92,14 +98,7 @@ public class Calculator
         if (m.ReturnType != typeof(double))
             throw new ArgumentException($"Operation '{name}' must return double");
 
-        // varargs: Func<double[], double>
-        if (prms.Length == 1 && prms[0].ParameterType == typeof(double[]))
-        {
-            var func = (Func<double[], double>)del;
-            return new Operation(name, func, -1);
-        }
-
-        // фиксированное число аргументов
+        // Фиксированное число аргументов
         if (prms.All(p => p.ParameterType == typeof(double)))
         {
             int expected = prms.Length;
@@ -111,7 +110,13 @@ public class Calculator
                         throw new InsufficientArgumentsException(name, expected, args.Length);
                     return (double)del.DynamicInvoke(args.Cast<object>().ToArray())!;
                 },
-                expected);
+                expected); 
+        }
+
+        if (prms.Length == 1 && prms[0].ParameterType == typeof(double[]))
+        {
+            var func = (Func<double[], double>)del;
+            return new Operation(name, func, -1);
         }
 
         throw new ArgumentException(

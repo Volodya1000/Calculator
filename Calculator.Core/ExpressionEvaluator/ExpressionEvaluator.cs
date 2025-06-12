@@ -1,22 +1,20 @@
 ﻿using Calculator.Core.Exceptions.ExpressionExceptions;
 using Calculator.Core.Exceptions.OperationExceptions;
 using Calculator.Core.ExpressionEvaluator.Tokinezation;
-using Calculator.Core.Interfaces;
-using Calculator.Core.Operations;
 using System.Globalization;
 
 namespace Calculator.Core.ExpressionEvaluator;
 
 public class ExpressionEvaluator
-
 {
-    private readonly Dictionary<string, IOperation> _operations;
+    private readonly Calculator _calculator;
     private readonly Dictionary<string, double> _constants;
-    public ExpressionEvaluator(Dictionary<string, IOperation> operations,Dictionary<string,double> constants)
+
+    public ExpressionEvaluator(Calculator calculator,Dictionary<string,double> constants)
     {
-        _operations= operations;
         _constants= constants;
-        _operations.Add("~", new Operation("~", args =>(-1)*args[0],1));
+        _calculator=calculator;
+        _calculator["~"]= (double arg) =>(-1)*arg;
     }
 
     public double Evaluate(IEnumerable<Token> rpn)
@@ -59,18 +57,35 @@ public class ExpressionEvaluator
 
     private void EvaluateOperation(Token token, Stack<double> rpnStack)
     {
-        if (!_operations.TryGetValue(token.Value, out var operation))
+        if (!_calculator.OperationExists(token.Value))
             throw new UnknownTokenException(token.Value,token.Start,token.End);
 
-        if (rpnStack.Count < operation.ArgsCount)
-            throw new InsufficientArgumentsException(token.Value, operation.ArgsCount, rpnStack.Count);
+        int argsCount = _calculator.Operations[token.Value].ArgsCount;
 
-        var args = new double[operation.ArgsCount];
-        for (int i = operation.ArgsCount - 1; i >= 0; i--)
+        if (rpnStack.Count < argsCount)
+            throw new InsufficientArgumentsException(token.Value, argsCount, rpnStack.Count);
+        double[] args;
+        if (argsCount == -1)
         {
-            args[i] = rpnStack.Pop();
+            args = rpnStack.ToArray();
+        }
+        else
+        {
+            // Выделение массива под нужное число аргументов
+            args = new double[argsCount];
+
+            // Забираем нужное количество элементов из стека
+            for (int i = argsCount - 1; i >= 0; i--)
+            {
+                args[i] = rpnStack.Pop();
+            }
         }
 
-        rpnStack.Push(operation.Call(args));
+        var result = _calculator.Call(token.Value, args);
+
+        if (result.IsFailure)
+            throw result.Error;
+        else
+            rpnStack.Push(result.Value);
     }
 }

@@ -2,11 +2,13 @@
 using Avalonia.ReactiveUI;
 using Calculator.Avalonia.Views;
 using Calculator.Core;
-using Calculator.Core.Interfaces;
 using Calculator.Core.Builders;
+using Calculator.Core.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Calculator.Avalonia;
 
@@ -27,10 +29,16 @@ internal sealed class Program
 
     private static void ConfigureServices(IServiceCollection services)
     {
-        var operations = new OperationsBuilder().AddAll().Build();
-        var constants = new ConstantsBuilder().AddMathConstants().Build();
+        var constantsDictionary = new ConstantsBuilder().AddMathConstants().Build();
 
-        services.AddTransient<IExpressionCalculator>(provider => new ExpressionsCalculatorFacade(operations, constants));
+        services.AddSingleton(constantsDictionary);
+
+        // Зарегистрировать калькулятор
+        var calculator = new Calculator.Core.Calculator().AddAssembly("Calculator.Core.dll");
+        services.AddSingleton(calculator);
+
+        services.AddSingleton<IExpressionCalculator, ExpressionsEvaluatorFacade>();
+
         services.AddTransient<MainWindow>();
     }
 

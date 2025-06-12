@@ -24,7 +24,7 @@ public class ExpressionTokenizer
         // Добавляем функции, если они есть
         if (functions != null && functions.Count > 0)
         {
-            string functionPattern = string.Join("|", functions.Select(Regex.Escape));
+            string functionPattern = string.Join("|", functions.Select(f=>f.ToLower()).Select(Regex.Escape));
             patternParts.Add($@"(?<Function>{functionPattern})");
         }
 
@@ -46,7 +46,7 @@ public class ExpressionTokenizer
 
     public List<Token> Tokenize(string expression)
     {
-        var matches = _regex.Matches(expression);
+        var matches = _regex.Matches(expression.ToLower());
         var tokens = new List<Token>();
 
         foreach (Match match in matches.Cast<Match>())

@@ -5,22 +5,22 @@ using Calculator.Core.ResultPattern;
 
 namespace Calculator.Core;
 
-public class ExpressionsCalculatorFacade : IExpressionCalculator
+public class ExpressionsEvaluatorFacade : IExpressionCalculator
 {
     private readonly Dictionary<string, IOperation> _operations;
     private readonly ExpressionTokenizer _tokenizer;
     private readonly PrattParser _parser;
     private readonly ExpressionEvaluator.ExpressionEvaluator _evaluator;
 
-    public ExpressionsCalculatorFacade(Dictionary<string, IOperation> operations,
+    public ExpressionsEvaluatorFacade(Calculator calculator,
                                        Dictionary<string, double> constants)
     {
         _operations = new Dictionary<string, IOperation>(
-            operations,
+            calculator.Operations,
             StringComparer.OrdinalIgnoreCase);
-        _tokenizer = new ExpressionTokenizer(operations.Keys.ToList(), constants.Keys.ToList());
-        _parser = new PrattParser(operations);
-        _evaluator = new ExpressionEvaluator.ExpressionEvaluator(operations, constants);
+        _tokenizer = new ExpressionTokenizer(calculator.Operations.Keys.ToList(), constants.Keys.ToList());
+        _parser = new PrattParser(calculator.Operations);
+        _evaluator = new ExpressionEvaluator.ExpressionEvaluator(calculator, constants);
     }
 
     public Result<double> EvaluateExpression(string expression)
