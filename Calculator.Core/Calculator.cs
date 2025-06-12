@@ -66,7 +66,8 @@ public class Calculator
                 else
                     continue;
 
-                _operations[m.Name] = CreateOperationFromDelegate(m.Name, del);
+                string opName = attr.Name ?? m.Name;
+                _operations[opName] = CreateOperationFromDelegate(m.Name, del);
             }
 
         return this;
