@@ -53,7 +53,7 @@ namespace Calculator.Avalonia.ViewModels
 
             EnterOperatorCommand = ReactiveCommand.Create<string>(@operator =>
             {
-                Expression=_calculator.TryAddOperator(Expression,@operator);
+                Expression=_calculator.TryAddOperator( Expression,@operator);
             });
 
             

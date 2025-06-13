@@ -1,5 +1,6 @@
 ﻿using Calculator.ConsoleApp;
 
+
 Calculator.Core.Calculator calculator = new Calculator.Core.Calculator()
 {
     ["pow"] = Math.Pow,
@@ -7,6 +8,6 @@ Calculator.Core.Calculator calculator = new Calculator.Core.Calculator()
     ["average"] = (double[] x) => x.Average()
 }.AddAssembly("CalculatorExternalAssembly.dll");
 
-var consoleProcessor = new ConsoleProcessor(calculator); 
+var consoleProcessor = new ConsoleProcessor(calculator);
 consoleProcessor.Run();
 

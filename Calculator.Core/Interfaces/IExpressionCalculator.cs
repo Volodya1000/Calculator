@@ -8,3 +8,5 @@ public interface IExpressionCalculator
     public string GetStringAfterErasingLastToken(string expression);
     public string TryAddOperator(string expression, string operatorName);
 }
+
+

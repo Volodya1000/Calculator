@@ -111,7 +111,7 @@ public class ConsoleProcessor
         Console.ForegroundColor = _messageColor;
         Console.WriteLine("Available operations:");
 
-        foreach (var operation in _calculatorFacade.GetAvailableOperationsNames())
+        foreach (var operation in _calculatorFacade.GetAllOperationsNames())
         {
             Console.WriteLine($"  {operation}");
         }
