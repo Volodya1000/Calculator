@@ -85,29 +85,29 @@
       <Button Content="1/x" Command="{Binding EnterSymbolCommand}" CommandParameter="1/"/>
       <Button Content="π" Command="{Binding EnterSymbolCommand}" CommandParameter="pi"/>
       <Button Content="atan2" Command="{Binding EnterSymbolCommand}" CommandParameter="atan2"/>
-      <Button Content="%" Command="{Binding EnterSymbolCommand}" CommandParameter="%"/>
-      <Button Content="÷" Command="{Binding EnterSymbolCommand}" CommandParameter="/" />
+      <Button Content="%" Command="{Binding EnterOperatorCommand}" CommandParameter="%"/>
+      <Button Content="÷" Command="{Binding EnterOperatorCommand}" CommandParameter="/" />
 
       <!-- ROW 3 -->
       <Button Content="√x" Command="{Binding EnterFunctionCommand}" CommandParameter="sqrt"/>
       <Button Classes="digit" Content="7" Command="{Binding EnterSymbolCommand}" CommandParameter="7"/>
       <Button Classes="digit" Content="8" Command="{Binding EnterSymbolCommand}" CommandParameter="8"/>
       <Button Classes="digit" Content="9" Command="{Binding EnterSymbolCommand}" CommandParameter="9"/>
-      <Button Content="×" Command="{Binding EnterSymbolCommand}" CommandParameter="*" />
+      <Button Content="×" Command="{Binding EnterOperatorCommand}" CommandParameter="*" />
 
       <!-- ROW 4 -->
-      <Button Content="x!" Command="{Binding EnterSymbolCommand}" CommandParameter="!"/>
+      <Button Content="x!" Command="{Binding EnterOperatorCommand}" CommandParameter="!"/>
       <Button Classes="digit" Content="4" Command="{Binding EnterSymbolCommand}" CommandParameter="4"/>
       <Button Classes="digit" Content="5" Command="{Binding EnterSymbolCommand}" CommandParameter="5"/>
       <Button Classes="digit" Content="6" Command="{Binding EnterSymbolCommand}" CommandParameter="6"/>
-      <Button Content="−" Command="{Binding EnterSymbolCommand}" CommandParameter="-" />
+      <Button Content="−" Command="{Binding EnterOperatorCommand}" CommandParameter="-" />
 
       <!-- ROW 5 -->
       <Button Content="xʸ" Command="{Binding EnterSymbolCommand}" CommandParameter="^"/>
       <Button Classes="digit" Content="1" Command="{Binding EnterSymbolCommand}" CommandParameter="1"/>
       <Button Classes="digit" Content="2" Command="{Binding EnterSymbolCommand}" CommandParameter="2"/>
       <Button Classes="digit" Content="3" Command="{Binding EnterSymbolCommand}" CommandParameter="3"/>
-      <Button Content="+" Command="{Binding EnterSymbolCommand}" CommandParameter="+" />
+      <Button Content="+" Command="{Binding EnterOperatorCommand}" CommandParameter="+" />
 
       <!-- ROW 6 -->
       <Button Content="x²" Command="{Binding EnterSymbolCommand}" CommandParameter="^2"/>

@@ -50,6 +50,13 @@ namespace Calculator.Avalonia.ViewModels
             {
                 Expression += function + "(";
             });
+
+            EnterOperatorCommand = ReactiveCommand.Create<string>(@operator =>
+            {
+                Expression=_calculator.TryAddOperator(Expression,@operator);
+            });
+
+            
         }
 
         private string _expression = "";
@@ -71,5 +78,6 @@ namespace Calculator.Avalonia.ViewModels
         public ReactiveCommand<Unit, Unit> ExecuteOperation { get; }
         public ReactiveCommand<string, Unit> EnterSymbolCommand { get; }
         public ReactiveCommand<string, Unit> EnterFunctionCommand { get; }
+        public ReactiveCommand<string, Unit> EnterOperatorCommand { get; }
     }
 }

@@ -21,7 +21,7 @@ public class Calculator
             return a / b;
         }, 2);
         AddUnaryOperator("~", (double x) => -x, 3);
-        AddBinaryOperator("^", (double a, double b) => Math.Pow(a, b), 5);
+        AddBinaryOperator("^", Math.Pow, 5);
         AddUnaryOperator("!", MathOperations.Factorial, 5);
         AddUnaryOperator("%", (double arg) => arg / 100, 5);
     }
@@ -54,7 +54,7 @@ public class Calculator
 
     public Delegate this[string name]
     {
-        set => Operations[name] = CreateOperationFromDelegate(name, value);
+        set => Operations.TryAdd(name,CreateOperationFromDelegate(name, value));
     }
 
     public Calculator AddAssembly(string assemblyPath)
@@ -76,13 +76,13 @@ public class Calculator
                 {
                     var func = (Func<double[], double>)(arr =>
                         (double)m.Invoke(null, new object[] { arr })!);
-                    Operations[opName] = new Operation(opName, func, -1);
+                    Operations.TryAdd(opName,new Operation(opName, func, -1));
                 }
                 // Обработка операций с фиксированными аргументами
                 else if (prms.All(p => p.ParameterType == typeof(double)))
                 {
                     int arity = prms.Length;
-                    Operations[opName] = new Operation(
+                    var operation = new Operation(
                         opName,
                         args =>
                         {
@@ -90,7 +90,8 @@ public class Calculator
                                 throw new InsufficientArgumentsException(opName, arity, args.Length);
                             return (double)m.Invoke(null, args.Cast<object>().ToArray())!;
                         },
-                        arity); 
+                        arity);
+                    Operations.TryAdd(opName, operation); 
                 }
             }
         return this;
@@ -98,12 +99,12 @@ public class Calculator
 
     private void AddBinaryOperator(string key,Func<double, double, double> func, int precedence)
     {
-        Operations.Add(key, new Operator(key, args => func(args[0], args[1]),2, precedence));
+        Operations.TryAdd(key, new Operator(key, args => func(args[0], args[1]),2, precedence));
     }
 
     private void AddUnaryOperator(string key, Func<double, double> func, int precedence)
     {
-        Operations.Add(key, new Operator(key, args => func(args[0]), 1, precedence));
+        Operations.TryAdd(key, new Operator(key, args => func(args[0]), 1, precedence));
     }
 
     private IOperation CreateOperationFromDelegate(string name, Delegate del)

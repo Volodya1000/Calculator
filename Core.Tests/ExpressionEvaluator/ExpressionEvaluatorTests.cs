@@ -16,6 +16,7 @@ public class ExpressionEvaluatorTests
     [InlineData("-2^-2", -0.25)]
     [InlineData("(-2)^-2", 0.25)]
     [InlineData("cos(7 - 5)^2 + sin(4-2)^2", 1)]
+    [InlineData("500%!", 120)]
     [InlineData("max(min(1,2),min(3,4),0)", 3)]
     public void ValidExpressions_EvaluateCorrectly(string expression, double expected)
     {
