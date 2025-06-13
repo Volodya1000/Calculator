@@ -160,18 +160,35 @@ public class PrattParser
     {
         var token = Consume(TokenType.Function);
         Consume(TokenType.LeftParenthesis);
-        ParseExpression();
 
         int argCount = _operations[token.Value].ArgsCount;
-        for (int i = 1; i < argCount; i++)
+
+        if (argCount == -1)
         {
-            Consume(TokenType.Delimiter);
-            ParseExpression();
+            // Add marker for functions with unlimited arguments
+            _rpn.Add(new Token(TokenType.Delimiter, "#", token.Start, token.End));
+            while (_currentToken != null && _currentToken.Type != TokenType.RightParenthesis)
+            {
+                ParseExpression();
+                if (_currentToken != null && _currentToken.Type == TokenType.Delimiter)
+                    Consume(TokenType.Delimiter);
+            }
+        }
+        else
+        {
+            // Parse fixed number of arguments
+            for (int i = 0; i < argCount; i++)
+            {
+                ParseExpression();
+                if (i < argCount - 1)
+                    Consume(TokenType.Delimiter);
+            }
         }
 
         Consume(TokenType.RightParenthesis);
         _rpn.Add(token);
     }
+
 
     /*
      * Postfix

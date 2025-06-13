@@ -14,26 +14,28 @@ public class ExpressionEvaluator
     {
         _constants= constants;
         _calculator=calculator;
-        _calculator["~"]= (double arg) =>(-1)*arg;
     }
 
     public double Evaluate(IEnumerable<Token> rpn)
     {
-        Stack<double> rpnStack = new Stack<double>();
+        Stack<double> operandsStack = new Stack<double>();
 
         foreach (Token token in rpn)
         {
             switch (token.Type)
             {
                 case TokenType.Number:
-                    rpnStack.Push(double.Parse(token.Value, CultureInfo.InvariantCulture));
+                    operandsStack.Push(double.Parse(token.Value, CultureInfo.InvariantCulture));
                     break;
                 case TokenType.Constant:
-                    EvaluateConstant(token,rpnStack);
+                    EvaluateConstant(token,operandsStack);
                     break;
                 case TokenType.Operator:
                 case TokenType.Function:
-                    EvaluateOperation(token, rpnStack);
+                    EvaluateOperation(token, operandsStack);
+                    break;
+                case TokenType.Delimiter:
+                    operandsStack.Push(double.NaN); //NaN как маркер в стеке для функций с неограниченным количеством аргументов
                     break;
                 default:
                     throw new UnexpectedTokenException(token.Value,"",token.Start,token.End);
@@ -41,51 +43,55 @@ public class ExpressionEvaluator
         }
 
         //В стеке должен остаться только один ответ
-        if (rpnStack.Count != 1)
+        if (operandsStack.Count != 1)
             throw new InvalidExpressionException();
 
-        return rpnStack.Pop();
+        return operandsStack.Pop();
     }
 
-    private void EvaluateConstant(Token token, Stack<double> rpnStack)
+    private void EvaluateConstant(Token token, Stack<double> operandsStack)
     {
         if (!_constants.TryGetValue(token.Value, out double constant))
             throw new UnknownTokenException(token.Value, token.Start, token.End);
 
-        rpnStack.Push(constant);
+        operandsStack.Push(constant);
     }
 
-    private void EvaluateOperation(Token token, Stack<double> rpnStack)
+    private void EvaluateOperation(Token token, Stack<double> operandsStack)
     {
         if (!_calculator.OperationExists(token.Value))
-            throw new UnknownTokenException(token.Value,token.Start,token.End);
+            throw new UnknownTokenException(token.Value, token.Start, token.End);
 
         int argsCount = _calculator.Operations[token.Value].ArgsCount;
+        List<double> args = new List<double>();
 
-        if (rpnStack.Count < argsCount)
-            throw new InsufficientArgumentsException(token.Value, argsCount, rpnStack.Count);
-        double[] args;
         if (argsCount == -1)
         {
-            args = rpnStack.ToArray();
+            // собираем аргументы пока не будет найден маркер
+            while (operandsStack.Count > 0 && !double.IsNaN(operandsStack.Peek()))
+            {
+                args.Insert(0, operandsStack.Pop());
+            }
+            if (operandsStack.Count == 0)
+                throw new InvalidExpressionException();
+            operandsStack.Pop(); // удаление маркера
         }
         else
         {
-            // Выделение массива под нужное число аргументов
-            args = new double[argsCount];
-
-            // Забираем нужное количество элементов из стека
-            for (int i = argsCount - 1; i >= 0; i--)
+            if (operandsStack.Count < argsCount)
+                throw new InsufficientArgumentsException(token.Value, argsCount, operandsStack.Count);
+            for (int i = 0; i < argsCount; i++)
             {
-                args[i] = rpnStack.Pop();
+                args.Insert(0, operandsStack.Pop());
             }
         }
 
-        var result = _calculator.Call(token.Value, args);
+        var result = _calculator.Call(token.Value, args.ToArray());
 
         if (result.IsFailure)
             throw result.Error;
         else
-            rpnStack.Push(result.Value);
+            operandsStack.Push(result.Value);
     }
+
 }
