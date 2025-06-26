@@ -29,4 +29,25 @@ public class ExpressionEvaluatorTests
         Assert.True(result.IsSuccess);
         Assert.Equal(expected, result.Value, Eps);
     }
+
+
+    [Theory]
+    [InlineData("1.", 1)]
+    [InlineData("1 +  * 3", 7)]
+    [InlineData("(-2%*^2", 4)]
+    [InlineData("-2-^--+-2", -0.25)]
+    [InlineData("(-2фыы-2", 0.25)]
+    [InlineData("coos(7. - 5)^2 + sin(4-2)^2", 1)]
+    [InlineData("50aa0%!", 120)]
+    [InlineData("max(,,,min(1,2),min(3,4),0)", 3)]
+    public void ValidExpressions_EvaluateIncorrect(string expression, double expected)
+    {
+        var constantsDictionary = new ConstantsBuilder().AddMathConstants().Build();
+
+        var calculator = new Calculator.Core.Calculator().AddAssembly("Calculator.Core.dll");
+
+        var facade = new ExpressionsEvaluatorFacade(calculator, constantsDictionary);
+        var result = facade.EvaluateExpression(expression);
+        Assert.True(result.IsFailure);
+    }
 }
